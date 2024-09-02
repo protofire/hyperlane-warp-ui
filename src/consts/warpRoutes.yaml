@@ -29,7 +29,7 @@ tokens:
     decimals: 18
     name: USD Token
     standard: EvmHypSynthetic
-    symbol: USDT
+    symbol: USD
     logoURI: /logos/usdt.svg
   - addressOrDenom: "0x598e67c51C4BB228A1a7249e955806371ca23719"
     chainName: sepolia
@@ -39,7 +39,7 @@ tokens:
     decimals: 18
     name: USD Token
     standard: EvmHypCollateral
-    symbol: USDT
+    symbol: USD
     logoURI: /logos/usdt.svg
   - addressOrDenom: "0x669837b11e91531d0e7B3E826612ef5f86698866"
     chainName: satori
