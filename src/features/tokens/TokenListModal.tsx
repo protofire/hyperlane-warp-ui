@@ -191,7 +191,7 @@ export function TokenList({
               </div>
               <div className="ml-2 text-left shrink min-w-0">
                 <div className="text-xs w-full truncate">
-                  {t.token.addressOrDenom || 'Native chain token'}
+                  {t.token.standard != TokenStandard.EvmHypNative ? t.token.addressOrDenom : 'Native chain token'}
                 </div>
                 <div className="mt-0.5 text-xs flex space-x-1">
                   <span>{`Decimals: ${t.token.decimals}`}</span>

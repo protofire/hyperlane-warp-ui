@@ -57,8 +57,8 @@ export function Footer() {
                   <Image
                     src={ProtofireLogo}
                     alt="Protofire"
-                    width={80}
-                    height={20}
+                    width={120}
+                    height={30}
                   />
                 </a>
               </div>
