@@ -7,7 +7,7 @@ import { TransferTokenForm } from './TransferTokenForm';
 
 export function TransferTokenCard() {
   return (
-    <Card className="w-100 sm:w-[31rem]">
+    <Card className="w-full max-w-4xl mx-auto">
       <>
         <div className="absolute left-0 right-0 -top-36 xs:-top-[6.5rem] flex justify-center overflow-hidden z-10">
           <WideChevron
@@ -15,7 +15,7 @@ export function TransferTokenCard() {
             height="100%"
             width="100"
             rounded={true}
-            color={Color.primaryBlack}
+            color={Color.primaryBlue}
           />
         </div>
         <TransferTokenForm />

@@ -30,6 +30,7 @@ tokens:
     name: Test Auto Coin
     standard: EvmHypNative
     symbol: TATC
+    logoURI: /logos/tatc.svg
   - addressOrDenom: "0x9154E37FcB63d5F38045A6c5A2A0DB32a0fa189f"
     chainName: sepolia
     connections:
@@ -38,6 +39,7 @@ tokens:
     name: Wrapped Test Auto Coin
     standard: EvmHypSynthetic
     symbol: WTATC
+    logoURI: /logos/tatc.svg
   - addressOrDenom: "0x778FA26D1af7Acae66272DD429d6B4AF059bb0df"
     chainName: atn
     connections:

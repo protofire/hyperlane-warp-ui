@@ -36,3 +36,4 @@ atn:
   protocol: ethereum
   rpcUrls:
     - http: https://nova-0.gemini-3h.subspace.network/ws
+  logoURI: /logos/tatc.svg

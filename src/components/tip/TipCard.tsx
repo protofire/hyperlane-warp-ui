@@ -9,8 +9,8 @@ export function TipCard() {
   const [show, setShow] = useState(config.showTipBox);
   if (!show) return null;
   return (
-    <Card className="w-100 sm:w-[31rem]">
-      <h2 className="font-semibold text-black text-center sm:text-lg">Demo Bridge: Sepolia ⇄ Vana Satori Testnet</h2>
+    <Card className="w-full max-w-4xl mx-auto">
+      <h2 className="font-semibold text-black text-center sm:text-lg">Demo Bridge: Sepolia ⇄ Autonomys Nova Testnet</h2>
       <div className="flex flex-col items-center">
         <p className="text-center text-base sm:text-lg mb-2">Faucets:</p>
         <div className="flex justify-center space-x-4 text-xs sm:text-sm">
@@ -24,10 +24,10 @@ export function TipCard() {
             <img src="/logos/usdt.svg" alt="USDT" className="w-4 h-4 mr-1" />
             USDT Sepolia
           </a>
-          <a href="https://faucet.vana.org/" target="_blank" rel="noopener noreferrer" 
+          <a href="https://subspacefaucet.com/" target="_blank" rel="noopener noreferrer" 
             className="flex items-center text-black underline hover:underline">
-            <img src="/logos/vana.svg" alt="Vana" className="w-4 h-4 mr-1" />
-            Vana
+            <img src="/logos/tatc.svg" alt="TATC" className="w-4 h-4 mr-1" />
+            TATC
           </a>
         </div>
       </div>

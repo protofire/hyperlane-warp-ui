@@ -113,10 +113,10 @@ function ChainSelectSection({ isReview }: { isReview: boolean }) {
   const chains = useMemo(() => getWarpCore().getTokenChains(), []);
 
   return (
-    <div className="flex items-center justify-center space-x-7 sm:space-x-10">
+    <div className="flex items-center justify-between w-full max-w-3xl mx-auto">
       <ChainSelectField name="origin" label="From" chains={chains} disabled={isReview} />
-      <div className="flex flex-col items-center">
-        <div className="flex mb-6 sm:space-x-1.5">
+      <div className="flex flex-col items-center mx-4">
+        <div className="flex mb-6 space-x-2">
           <WideChevron classes="hidden sm:block" />
           <WideChevron />
           <WideChevron />
