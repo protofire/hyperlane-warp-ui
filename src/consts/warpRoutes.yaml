@@ -4,59 +4,57 @@
 ---
 # yaml-language-server: $schema=../schema.json
 tokens:
-  - addressOrDenom: "0x1F16A6B0358835af5D642A0417A6D9af90Cd1cb6"
-    chainName: satori
+  - addressOrDenom: "0x449294a16b16E74173FC607a78C73506e59C9ba5"
+    chainName: atn
     connections:
-      - token: ethereum|sepolia|0x0C6Bb5c525b5548897d19eD625D6939d6A8b0E14
+      - token: ethereum|sepolia|0x704890cc5cDEE3417D44c5F4c16e1fC3841A3Fe1
     decimals: 18
-    name: Ether
+    name: Wrapped Ether
     standard: EvmHypSynthetic
     symbol: WETH
     logoURI: /logos/eth.svg
-  - addressOrDenom: "0x0C6Bb5c525b5548897d19eD625D6939d6A8b0E14"
+  - addressOrDenom: "0x704890cc5cDEE3417D44c5F4c16e1fC3841A3Fe1"
     chainName: sepolia
     connections:
-      - token: ethereum|satori|0x1F16A6B0358835af5D642A0417A6D9af90Cd1cb6
+      - token: ethereum|atn|0x449294a16b16E74173FC607a78C73506e59C9ba5
     decimals: 18
     name: Ether
     standard: EvmHypNative
     symbol: ETH
     logoURI: /logos/eth.svg
-  - addressOrDenom: "0xf0De77E5D89D7A2f417be20Cc31f4b033c79Bd9d"
-    chainName: satori
+  - addressOrDenom: "0x9557016CcdB31f29E5401F902AD7FC933969D3cd"
+    chainName: atn
     connections:
-      - token: ethereum|sepolia|0x598e67c51C4BB228A1a7249e955806371ca23719
+      - token: ethereum|sepolia|0x9154E37FcB63d5F38045A6c5A2A0DB32a0fa189f
+    decimals: 18
+    name: Test Auto Coin
+    standard: EvmHypNative
+    symbol: TATC
+  - addressOrDenom: "0x9154E37FcB63d5F38045A6c5A2A0DB32a0fa189f"
+    chainName: sepolia
+    connections:
+      - token: ethereum|atn|0x9557016CcdB31f29E5401F902AD7FC933969D3cd
+    decimals: 18
+    name: Wrapped Test Auto Coin
+    standard: EvmHypSynthetic
+    symbol: WTATC
+  - addressOrDenom: "0x778FA26D1af7Acae66272DD429d6B4AF059bb0df"
+    chainName: atn
+    connections:
+      - token: ethereum|sepolia|0x8f55AB35577c72b087a1a18401D6eb4F19667C9F
     decimals: 18
     name: USD Token
     standard: EvmHypSynthetic
     symbol: USD
     logoURI: /logos/usdt.svg
-  - addressOrDenom: "0x598e67c51C4BB228A1a7249e955806371ca23719"
+  - addressOrDenom: "0x8f55AB35577c72b087a1a18401D6eb4F19667C9F"
     chainName: sepolia
     collateralAddressOrDenom: "0x7f11f79DEA8CE904ed0249a23930f2e59b43a385"
     connections:
-      - token: ethereum|satori|0xf0De77E5D89D7A2f417be20Cc31f4b033c79Bd9d
+      - token: ethereum|atn|0x778FA26D1af7Acae66272DD429d6B4AF059bb0df
     decimals: 18
     name: USD Token
     standard: EvmHypCollateral
     symbol: USD
     logoURI: /logos/usdt.svg
-  - addressOrDenom: "0x669837b11e91531d0e7B3E826612ef5f86698866"
-    chainName: satori
-    connections:
-      - token: ethereum|sepolia|0x47f8e3a514907b8B46DD88d87Df748AE181cCd48
-    decimals: 18
-    name: Vana
-    standard: EvmHypNative
-    symbol: VANA
-    logoURI: /logos/vana.svg
-  - addressOrDenom: "0x47f8e3a514907b8B46DD88d87Df748AE181cCd48"
-    chainName: sepolia
-    connections:
-      - token: ethereum|satori|0x669837b11e91531d0e7B3E826612ef5f86698866
-    decimals: 18
-    name: Vana
-    standard: EvmHypSynthetic
-    symbol: WVANA
-    logoURI: /logos/vana.svg
 options: {}

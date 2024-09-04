@@ -1,5 +1,4 @@
-import { ChainMap, ChainMetadata, ExplorerFamily } from '@hyperlane-xyz/sdk';
-import { ProtocolType } from '@hyperlane-xyz/utils';
+import { ChainMap, ChainMetadata } from '@hyperlane-xyz/sdk';
 
 // A map of chain names to ChainMetadata
 // Chains can be defined here, in chains.json, or in chains.yaml
@@ -29,23 +28,4 @@ export const chains: ChainMap<ChainMetadata & { mailbox?: Address }> = {
   //   },
   //   logoURI: '/logo.svg',
   // },
-  satori: {
-    protocol: ProtocolType.Ethereum,
-    chainId: 14801,
-    domainId: 14801,
-    name: 'satori',
-    displayName: 'Vana Satori',
-    nativeToken: { name: 'Vana', symbol: 'VANA', decimals: 18 },
-    rpcUrls: [{ http: 'https://rpc.satori.vana.org' }],
-    blockExplorers: [
-      {
-        name: 'Vanascan',
-        url: 'https://satori.vanascan.io',
-        apiUrl: 'https://api.satori.vanascan.io/api',
-        family: ExplorerFamily.Blockscout,
-      },
-    ],
-    isTestnet: true,
-    logoURI: '/logos/vana.svg',
-  },
 };

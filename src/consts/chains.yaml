@@ -18,21 +18,21 @@
 #   protocol: ethereum
 #   rpcUrls:
 #     - http: http://127.0.0.1:8555
-satori:
+atn:
   blockExplorers:
-    - apiUrl: https://api.satori.vanascan.io/api
+    - apiUrl: https://nova.subspace.network/api
       family: blockscout
-      name: Vanascan
-      url: https://satori.vanascan.io
-  chainId: 14801
-  displayName: Vana Satori Testnet
-  domainId: 14801
+      name: Astral
+      url: https://nova.subspace.network/
+  chainId: 490000
+  displayName: Autonomys Testnet
+  domainId: 490000
   isTestnet: true
-  name: satori
+  name: atn
   nativeToken:
     decimals: 18
-    name: Vana
-    symbol: VANA
+    name: Test Auto Coin
+    symbol: TATC
   protocol: ethereum
   rpcUrls:
-    - http: https://rpc.satori.vana.org
+    - http: https://nova-0.gemini-3h.subspace.network/ws

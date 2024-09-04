@@ -3,9 +3,9 @@
 // If left null, all warp routes in the configured registry will be included
 // If set to a list (including an empty list), only the specified routes will be included
 export const warpRouteWhitelist: Array<string> | null = [
-  'ETH/satori-sepolia',
-  'USD/satori-sepolia',
-  'VANA/satori-sepolia',
+  'ETH/atn-sepolia',
+  'USD/atn-sepolia',
+  'TATC/atn-sepolia',
 ];
 // Example:
 // [
