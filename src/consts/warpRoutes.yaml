@@ -4,56 +4,56 @@
 ---
 # yaml-language-server: $schema=../schema.json
 tokens:
-  - addressOrDenom: "0x1F16A6B0358835af5D642A0417A6D9af90Cd1cb6"
-    chainName: satori
+  - addressOrDenom: "0x02918188a78595A11B2ca59bbb6Bc8D10d0b4d5e"
+    chainName: moksha
     connections:
-      - token: ethereum|sepolia|0x0C6Bb5c525b5548897d19eD625D6939d6A8b0E14
+      - token: ethereum|sepolia|0x74AEAa81037B1ea46075af694d26CC17479A7898
     decimals: 18
     name: Ether
     standard: EvmHypSynthetic
     symbol: WETH
     logoURI: /logos/eth.svg
-  - addressOrDenom: "0x0C6Bb5c525b5548897d19eD625D6939d6A8b0E14"
+  - addressOrDenom: "0x74AEAa81037B1ea46075af694d26CC17479A7898"
     chainName: sepolia
     connections:
-      - token: ethereum|satori|0x1F16A6B0358835af5D642A0417A6D9af90Cd1cb6
+      - token: ethereum|moksha|0x02918188a78595A11B2ca59bbb6Bc8D10d0b4d5e
     decimals: 18
     name: Ether
     standard: EvmHypNative
     symbol: ETH
     logoURI: /logos/eth.svg
-  - addressOrDenom: "0xf0De77E5D89D7A2f417be20Cc31f4b033c79Bd9d"
-    chainName: satori
+  - addressOrDenom: "0xc73D8E41ce0E6652C3f43713967CA1CFAcBf3291"
+    chainName: moksha
     connections:
-      - token: ethereum|sepolia|0x598e67c51C4BB228A1a7249e955806371ca23719
+      - token: ethereum|sepolia|0x0E41579A4B8F506591E33806f4A51e6C15792f6D
     decimals: 18
     name: USD Token
     standard: EvmHypSynthetic
     symbol: USD
     logoURI: /logos/usdt.svg
-  - addressOrDenom: "0x598e67c51C4BB228A1a7249e955806371ca23719"
+  - addressOrDenom: "0x0E41579A4B8F506591E33806f4A51e6C15792f6D"
     chainName: sepolia
     collateralAddressOrDenom: "0x7f11f79DEA8CE904ed0249a23930f2e59b43a385"
     connections:
-      - token: ethereum|satori|0xf0De77E5D89D7A2f417be20Cc31f4b033c79Bd9d
+      - token: ethereum|moksha|0xc73D8E41ce0E6652C3f43713967CA1CFAcBf3291
     decimals: 18
     name: USD Token
     standard: EvmHypCollateral
     symbol: USD
     logoURI: /logos/usdt.svg
-  - addressOrDenom: "0x669837b11e91531d0e7B3E826612ef5f86698866"
-    chainName: satori
+  - addressOrDenom: "0x26d083a89b8b300dBBe87A4ef6312f5F3e49E048"
+    chainName: moksha
     connections:
-      - token: ethereum|sepolia|0x47f8e3a514907b8B46DD88d87Df748AE181cCd48
+      - token: ethereum|sepolia|0x573F762682D3a5d16fF813684Cac719F93C367C8
     decimals: 18
     name: Vana
     standard: EvmHypNative
     symbol: VANA
     logoURI: /logos/vana.svg
-  - addressOrDenom: "0x47f8e3a514907b8B46DD88d87Df748AE181cCd48"
+  - addressOrDenom: "0x573F762682D3a5d16fF813684Cac719F93C367C8"
     chainName: sepolia
     connections:
-      - token: ethereum|satori|0x669837b11e91531d0e7B3E826612ef5f86698866
+      - token: ethereum|moksha|0x26d083a89b8b300dBBe87A4ef6312f5F3e49E048
     decimals: 18
     name: Vana
     standard: EvmHypSynthetic

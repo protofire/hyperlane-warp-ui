@@ -10,7 +10,7 @@ export function TipCard() {
   if (!show) return null;
   return (
     <Card className="w-100 sm:w-[31rem]">
-      <h2 className="font-semibold text-black text-center sm:text-lg">Demo Bridge: Sepolia ⇄ Vana Satori Testnet</h2>
+      <h2 className="font-semibold text-black text-center sm:text-lg">Sepolia ⇄ Vana Moksha Testnet Bridge</h2>
       <div className="flex flex-col items-center">
         <p className="text-center text-base sm:text-lg mb-2">Faucets:</p>
         <div className="flex justify-center space-x-4 text-xs sm:text-sm">
