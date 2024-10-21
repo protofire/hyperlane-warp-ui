@@ -2,5 +2,61 @@
 # These configs will be merged with the warp routes in the configured registry
 # The input here is typically the output of the Hyperlane CLI warp deploy command
 ---
-tokens: []
+# yaml-language-server: $schema=../schema.json
+tokens:
+  - addressOrDenom: "0x02918188a78595A11B2ca59bbb6Bc8D10d0b4d5e"
+    chainName: moksha
+    connections:
+      - token: ethereum|sepolia|0x74AEAa81037B1ea46075af694d26CC17479A7898
+    decimals: 18
+    name: Ether
+    standard: EvmHypSynthetic
+    symbol: WETH
+    logoURI: /logos/eth.svg
+  - addressOrDenom: "0x74AEAa81037B1ea46075af694d26CC17479A7898"
+    chainName: sepolia
+    connections:
+      - token: ethereum|moksha|0x02918188a78595A11B2ca59bbb6Bc8D10d0b4d5e
+    decimals: 18
+    name: Ether
+    standard: EvmHypNative
+    symbol: ETH
+    logoURI: /logos/eth.svg
+  - addressOrDenom: "0xc73D8E41ce0E6652C3f43713967CA1CFAcBf3291"
+    chainName: moksha
+    connections:
+      - token: ethereum|sepolia|0x0E41579A4B8F506591E33806f4A51e6C15792f6D
+    decimals: 18
+    name: USD Token
+    standard: EvmHypSynthetic
+    symbol: USD
+    logoURI: /logos/usdt.svg
+  - addressOrDenom: "0x0E41579A4B8F506591E33806f4A51e6C15792f6D"
+    chainName: sepolia
+    collateralAddressOrDenom: "0x7f11f79DEA8CE904ed0249a23930f2e59b43a385"
+    connections:
+      - token: ethereum|moksha|0xc73D8E41ce0E6652C3f43713967CA1CFAcBf3291
+    decimals: 18
+    name: USD Token
+    standard: EvmHypCollateral
+    symbol: USD
+    logoURI: /logos/usdt.svg
+  - addressOrDenom: "0x26d083a89b8b300dBBe87A4ef6312f5F3e49E048"
+    chainName: moksha
+    connections:
+      - token: ethereum|sepolia|0x573F762682D3a5d16fF813684Cac719F93C367C8
+    decimals: 18
+    name: Vana
+    standard: EvmHypNative
+    symbol: VANA
+    logoURI: /logos/vana.svg
+  - addressOrDenom: "0x573F762682D3a5d16fF813684Cac719F93C367C8"
+    chainName: sepolia
+    connections:
+      - token: ethereum|moksha|0x26d083a89b8b300dBBe87A4ef6312f5F3e49E048
+    decimals: 18
+    name: Vana
+    standard: EvmHypSynthetic
+    symbol: WVANA
+    logoURI: /logos/vana.svg
 options: {}

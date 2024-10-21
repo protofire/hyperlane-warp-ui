@@ -18,3 +18,21 @@
 #   protocol: ethereum
 #   rpcUrls:
 #     - http: http://127.0.0.1:8555
+moksha:
+  blockExplorers:
+    - apiUrl: https://api.moksha.vanascan.io/api
+      family: blockscout
+      name: Vanascan
+      url: https://moksha.vanascan.io
+  chainId: 14800
+  displayName: Vana Moksha
+  domainId: 14800
+  isTestnet: true
+  name: moksha
+  nativeToken:
+    decimals: 18
+    name: Vana
+    symbol: VANA
+  protocol: ethereum
+  rpcUrls:
+    - http: https://rpc.moksha.vana.org

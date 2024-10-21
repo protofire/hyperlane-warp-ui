@@ -86,6 +86,7 @@ const nextConfig = {
     hideSourceMaps: true,
     tunnelRoute: "/monitoring-tunnel",
   },
+  output: "standalone",
 }
 
 const sentryWebpackPluginOptions = {
