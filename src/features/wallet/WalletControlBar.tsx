@@ -9,17 +9,19 @@ import Wallet from '../../images/icons/wallet.svg';
 import { useIsSsr } from '../../utils/ssr';
 
 import { SideBarMenu } from './SideBarMenu';
-import { WalletEnvSelectionModal } from './WalletEnvSelectionModal';
-import { useAccounts, useWalletDetails } from './hooks/multiProtocol';
+//import { WalletEnvSelectionModal } from './WalletEnvSelectionModal';
+import { useAccounts, useConnectFns, useWalletDetails } from './hooks/multiProtocol';
 
 export function WalletControlBar() {
   const isSsr = useIsSsr();
 
-  const [showEnvSelectModal, setShowEnvSelectModal] = useState(false);
+  //const [showEnvSelectModal, setShowEnvSelectModal] = useState(false);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
   const { readyAccounts } = useAccounts();
   const walletDetails = useWalletDetails();
+
+  const connectFns = useConnectFns();
 
   const numReady = readyAccounts.length;
   const firstAccount = readyAccounts[0];
@@ -36,7 +38,7 @@ export function WalletControlBar() {
         {numReady === 0 && (
           <SolidButton
             classes="py-2 px-3"
-            onClick={() => setShowEnvSelectModal(true)}
+            onClick={connectFns[ProtocolType.Ethereum]}
             title="Choose wallet"
             icon={<Image src={Wallet} alt="" width={16} height={16} />}
             color="white"
@@ -79,15 +81,15 @@ export function WalletControlBar() {
         )}
       </div>
 
-      <WalletEnvSelectionModal
+      {/* <WalletEnvSelectionModal
         isOpen={showEnvSelectModal}
         close={() => setShowEnvSelectModal(false)}
-      />
+      /> */}
       {numReady > 0 && (
         <SideBarMenu
           onClose={() => setIsSideBarOpen(false)}
           isOpen={isSideBarOpen}
-          onConnectWallet={() => setShowEnvSelectModal(true)}
+          onConnectWallet={connectFns[ProtocolType.Ethereum]}
         />
       )}
     </div>
