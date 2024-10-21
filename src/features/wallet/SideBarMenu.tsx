@@ -21,11 +21,11 @@ import { useAccounts, useDisconnectFns, useWalletDetails } from './hooks/multiPr
 import { AccountInfo } from './hooks/types';
 
 export function SideBarMenu({
-  onConnectWallet,
+  //onConnectWallet,
   isOpen,
   onClose,
 }: {
-  onConnectWallet: () => void;
+  //onConnectWallet: () => void;
   isOpen: boolean;
   onClose: () => void;
 }) {

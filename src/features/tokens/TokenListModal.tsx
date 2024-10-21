@@ -159,7 +159,6 @@ export function TokenList({
         toast.warn('Token was not added to MetaMask');
       }
     } catch (error: any) {
-      console.error('Error adding token to MetaMask:', error);
       if (error.code === 4001) {
         toast.warn('You rejected the request to add the token to MetaMask');
       } else {

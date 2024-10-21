@@ -89,7 +89,7 @@ export function WalletControlBar() {
         <SideBarMenu
           onClose={() => setIsSideBarOpen(false)}
           isOpen={isSideBarOpen}
-          onConnectWallet={connectFns[ProtocolType.Ethereum]}
+          //onConnectWallet={connectFns[ProtocolType.Ethereum]}
         />
       )}
     </div>
