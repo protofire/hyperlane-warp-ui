@@ -9,7 +9,7 @@ import Wallet from '../../images/icons/wallet.svg';
 import { useIsSsr } from '../../utils/ssr';
 import { useStore } from '../store';
 
-import { useAccounts, useWalletDetails } from './hooks/multiProtocol';
+import { useAccounts, useConnectFns, useWalletDetails } from './hooks/multiProtocol';
 
 export function WalletControlBar() {
   const isSsr = useIsSsr();
@@ -18,6 +18,14 @@ export function WalletControlBar() {
     setShowEnvSelectModal: s.setShowEnvSelectModal,
     setIsSideBarOpen: s.setIsSideBarOpen,
   }));
+
+  const connectFns = useConnectFns();
+
+  const onClickEnv = (env: ProtocolType) => () => {
+    close();
+    const connectFn = connectFns[env];
+    if (connectFn) connectFn();
+  };
 
   const { readyAccounts } = useAccounts();
   const walletDetails = useWalletDetails();
@@ -37,7 +45,7 @@ export function WalletControlBar() {
         {numReady === 0 && (
           <SolidButton
             classes="py-2 px-3"
-            onClick={() => setShowEnvSelectModal(true)}
+            onClick={onClickEnv(ProtocolType.Ethereum)}
             title="Choose wallet"
             icon={<Image src={Wallet} alt="" width={16} height={16} />}
             color="white"
