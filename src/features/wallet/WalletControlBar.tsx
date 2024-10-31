@@ -14,8 +14,8 @@ import { useAccounts, useConnectFns, useWalletDetails } from './hooks/multiProto
 export function WalletControlBar() {
   const isSsr = useIsSsr();
 
-  const { setShowEnvSelectModal, setIsSideBarOpen } = useStore((s) => ({
-    setShowEnvSelectModal: s.setShowEnvSelectModal,
+  const { /* setShowEnvSelectModal, */ setIsSideBarOpen } = useStore((s) => ({
+    //setShowEnvSelectModal: s.setShowEnvSelectModal,
     setIsSideBarOpen: s.setIsSideBarOpen,
   }));
 
