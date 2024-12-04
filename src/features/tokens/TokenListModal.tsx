@@ -1,4 +1,4 @@
-import { IToken } from '@hyperlane-xyz/sdk';
+import { IToken, TokenStandard } from '@hyperlane-xyz/sdk';
 import { Modal, SearchIcon } from '@hyperlane-xyz/widgets';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -143,7 +143,9 @@ export function TokenList({
             </div>
             <div className="ml-2 min-w-0 shrink text-left">
               <div className="w-full truncate text-xs">
-                {t.token.addressOrDenom || 'Native chain token'}
+                {t.token.standard != TokenStandard.EvmHypNative
+                  ? t.token.addressOrDenom
+                  : 'Native token'}
               </div>
               <div className="mt-0.5 flex space-x-1 text-xs">
                 <span>{`Decimals: ${t.token.decimals}`}</span>

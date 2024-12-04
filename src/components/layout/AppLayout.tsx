@@ -1,4 +1,5 @@
-import { MultiProtocolWalletModal } from '@hyperlane-xyz/widgets';
+import { ProtocolType } from '@hyperlane-xyz/utils';
+import { MultiProtocolWalletModal, useConnectFns } from '@hyperlane-xyz/widgets';
 import Head from 'next/head';
 import { PropsWithChildren } from 'react';
 import { APP_NAME, BACKGROUND_COLOR, BACKGROUND_IMAGE } from '../../consts/app';
@@ -16,6 +17,14 @@ export function AppLayout({ children }: PropsWithChildren) {
       setIsSideBarOpen: s.setIsSideBarOpen,
     }),
   );
+
+  const connectFns = useConnectFns();
+
+  const onClickEnv = (env: ProtocolType) => () => {
+    close();
+    const connectFn = connectFns[env];
+    if (connectFn) connectFn();
+  };
 
   return (
     <>
@@ -43,7 +52,7 @@ export function AppLayout({ children }: PropsWithChildren) {
       <SideBarMenu
         onClose={() => setIsSideBarOpen(false)}
         isOpen={isSideBarOpen}
-        onClickConnectWallet={() => setShowEnvSelectModal(true)}
+        onClickConnectWallet={onClickEnv(ProtocolType.Ethereum)}
       />
     </>
   );
