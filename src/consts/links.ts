@@ -1,5 +1,5 @@
 export const links = {
-  home: 'https://vana.com/',
+  home: 'https://vana.org/',
   explorer: 'https://vanascan.io/',
   discord: 'https://discord.com/app/invite-with-guild-onboarding/withvana',
   github: 'https://github.com/vana-com',
@@ -11,5 +11,5 @@ export const links = {
   blog: 'https://medium.com/hyperlane',
   tos: 'https://www.vana.org/legal/terms-conditions',
   privacyPolicy: 'https://www.vana.org/legal/privacy-policy',
-  dataHub: 'https://datahub.vana.org',
+  dataHub: 'https://datahub.vana.com',
 };

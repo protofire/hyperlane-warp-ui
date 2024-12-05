@@ -21,7 +21,6 @@ export function AppLayout({ children }: PropsWithChildren) {
   const connectFns = useConnectFns();
 
   const onClickEnv = (env: ProtocolType) => () => {
-    close();
     const connectFn = connectFns[env];
     if (connectFn) connectFn();
   };
