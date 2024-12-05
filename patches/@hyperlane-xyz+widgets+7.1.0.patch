@@ -1,0 +1,17 @@
+diff --git a/node_modules/@hyperlane-xyz/widgets/dist/walletIntegrations/AccountList.js b/node_modules/@hyperlane-xyz/widgets/dist/walletIntegrations/AccountList.js
+index f58d215..16773f1 100644
+--- a/node_modules/@hyperlane-xyz/widgets/dist/walletIntegrations/AccountList.js
++++ b/node_modules/@hyperlane-xyz/widgets/dist/walletIntegrations/AccountList.js
+@@ -32,10 +32,10 @@ export function AccountList({ multiProvider, onClickConnectWallet, onCopySuccess
+     };
+     return (React.createElement("div", { className: clsx('htw-space-y-2', className) },
+         readyAccounts.map((acc, i) => (React.createElement(AccountSummary, { key: i, account: acc, walletDetails: walletDetails[acc.protocol], onCopySuccess: onCopySuccess, onClickDisconnect: () => onClickDisconnect(acc.protocol) }))),
+-        React.createElement(Button, { onClick: onClickConnectWallet, className: clsx(styles.btn, 'htw-py-2 htw-px-2.5') },
++        readyAccounts.length === 0 && React.createElement(Button, { onClick: onClickConnectWallet, className: clsx(styles.btn, 'htw-py-2 htw-px-2.5') },
+             React.createElement(WalletIcon, { width: 18, height: 18 }),
+             React.createElement("div", { className: "htw-ml-2 htw-text-sm" }, "Connect wallet")),
+-        React.createElement(Button, { onClick: onClickDisconnectAll, className: clsx(styles.btn, 'htw-py-2 htw-px-2.5') },
++        readyAccounts.length > 0 && React.createElement(Button, { onClick: onClickDisconnectAll, className: clsx(styles.btn, 'htw-py-2 htw-px-2.5') },
+             React.createElement(LogoutIcon, { width: 18, height: 18 }),
+             React.createElement("div", { className: "htw-ml-2 htw-text-sm" }, "Disconnect all wallets"))));
+ }
