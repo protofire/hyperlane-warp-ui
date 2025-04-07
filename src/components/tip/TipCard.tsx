@@ -27,7 +27,7 @@ export function TipCard() {
           <a href="https://subspacefaucet.com/" target="_blank" rel="noopener noreferrer" 
             className="flex items-center text-black underline hover:underline">
             <img src="/logos/tatc.svg" alt="tAI3" className="w-4 h-4 mr-1" />
-            TATC
+            tAI3
           </a>
         </div>
       </div>
