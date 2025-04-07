@@ -4,59 +4,40 @@
 ---
 # yaml-language-server: $schema=../schema.json
 tokens:
-  - addressOrDenom: "0x449294a16b16E74173FC607a78C73506e59C9ba5"
+  - addressOrDenom: "0x56cb359B57d67B80Ce36C20245aDBF6ff3Ae0067"
     chainName: atn
     connections:
-      - token: ethereum|sepolia|0x704890cc5cDEE3417D44c5F4c16e1fC3841A3Fe1
+      - token: ethereum|sepolia|0x4C4F2C8ddA54F0790F1B6eE005085Cb788AC7eDE
     decimals: 18
-    name: Wrapped Ether
+    name: tAI3
+    standard: EvmHypNative
+    symbol: tAI3
+    logoURI: /logos/tatc.svg
+  - addressOrDenom: "0x4C4F2C8ddA54F0790F1B6eE005085Cb788AC7eDE"
+    chainName: sepolia
+    connections:
+      - token: ethereum|atn|0x56cb359B57d67B80Ce36C20245aDBF6ff3Ae0067
+    decimals: 18
+    name: tAI3
     standard: EvmHypSynthetic
+    symbol: WAI3
+    logoURI: /logos/tatc.svg
+  - addressOrDenom: "0x95C0E11356D90D498A7493D594Be7de4d85F8b49"
+    chainName: atn
+    standard: EvmHypSynthetic
+    decimals: 18
     symbol: WETH
-    logoURI: /logos/eth.svg
-  - addressOrDenom: "0x704890cc5cDEE3417D44c5F4c16e1fC3841A3Fe1"
-    chainName: sepolia
+    name: Wrapped Ether
     connections:
-      - token: ethereum|atn|0x449294a16b16E74173FC607a78C73506e59C9ba5
-    decimals: 18
-    name: Ether
+      - token: ethereum|sepolia|0xF515BC8231208b1caB2294ad077c0942bd6a7972
+    logoURI: /logos/eth.svg
+  - addressOrDenom: "0xF515BC8231208b1caB2294ad077c0942bd6a7972"
+    chainName: sepolia
     standard: EvmHypNative
+    decimals: 18
     symbol: ETH
+    name: Wrapped Ether
+    connections:
+      - token: ethereum|atn|0x95C0E11356D90D498A7493D594Be7de4d85F8b49
     logoURI: /logos/eth.svg
-  - addressOrDenom: "0x9557016CcdB31f29E5401F902AD7FC933969D3cd"
-    chainName: atn
-    connections:
-      - token: ethereum|sepolia|0x9154E37FcB63d5F38045A6c5A2A0DB32a0fa189f
-    decimals: 18
-    name: Test Auto Coin
-    standard: EvmHypNative
-    symbol: TATC
-    logoURI: /logos/tatc.svg
-  - addressOrDenom: "0x9154E37FcB63d5F38045A6c5A2A0DB32a0fa189f"
-    chainName: sepolia
-    connections:
-      - token: ethereum|atn|0x9557016CcdB31f29E5401F902AD7FC933969D3cd
-    decimals: 18
-    name: Wrapped Test Auto Coin
-    standard: EvmHypSynthetic
-    symbol: WTATC
-    logoURI: /logos/tatc.svg
-  - addressOrDenom: "0x778FA26D1af7Acae66272DD429d6B4AF059bb0df"
-    chainName: atn
-    connections:
-      - token: ethereum|sepolia|0x8f55AB35577c72b087a1a18401D6eb4F19667C9F
-    decimals: 18
-    name: USD Token
-    standard: EvmHypSynthetic
-    symbol: USD
-    logoURI: /logos/usdt.svg
-  - addressOrDenom: "0x8f55AB35577c72b087a1a18401D6eb4F19667C9F"
-    chainName: sepolia
-    collateralAddressOrDenom: "0x7f11f79DEA8CE904ed0249a23930f2e59b43a385"
-    connections:
-      - token: ethereum|atn|0x778FA26D1af7Acae66272DD429d6B4AF059bb0df
-    decimals: 18
-    name: USD Token
-    standard: EvmHypCollateral
-    symbol: USD
-    logoURI: /logos/usdt.svg
 options: {}

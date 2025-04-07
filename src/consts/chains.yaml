@@ -20,20 +20,20 @@
 #     - http: http://127.0.0.1:8555
 atn:
   blockExplorers:
-    - apiUrl: https://nova.subspace.network/api
+    - apiUrl: https://blockscout.taurus.autonomys.xyz/api
       family: blockscout
-      name: Astral
-      url: https://nova.subspace.network/
+      name: Autonomys Taurus Testnet Explorer
+      url: https://blockscout.taurus.autonomys.xyz
   chainId: 490000
-  displayName: Autonomys Testnet
+  displayName: Autonomys Taurus Testnet
   domainId: 490000
   isTestnet: true
   name: atn
   nativeToken:
     decimals: 18
-    name: Test Auto Coin
-    symbol: TATC
+    name: tAI3
+    symbol: tAI3
   protocol: ethereum
   rpcUrls:
-    - http: https://nova-0.gemini-3h.subspace.network/ws
+    - http: https://auto-evm.taurus.autonomys.xyz/ws
   logoURI: /logos/tatc.svg
