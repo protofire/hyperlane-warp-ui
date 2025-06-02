@@ -40,4 +40,24 @@ tokens:
     connections:
       - token: ethereum|atn|0x95C0E11356D90D498A7493D594Be7de4d85F8b49
     logoURI: /logos/eth.svg
+  - chainName: atn
+    standard: EvmHypCollateral
+    decimals: 18
+    symbol: twsol
+    name: TestWrappedSolanaToken
+    addressOrDenom: "0x3F0b455E1D785BE2CDE774eEee7806ABd7098c30"
+    collateralAddressOrDenom: "0x22a79c7F77696f7Ecf161B2Ad4890eD759895aB4"
+    connections:
+      - token: sealevel|solanatestnet|9XZTUugZg9XpZMBPZbRr2hFTsykoKTfEJbYM2iAmvrx5
+    logoURI: /logos/solana.svg
+  - chainName: solanatestnet
+    standard: SealevelHypSynthetic
+    decimals: 9
+    symbol: twsol
+    name: TestWrappedSolanaToken
+    addressOrDenom: "9XZTUugZg9XpZMBPZbRr2hFTsykoKTfEJbYM2iAmvrx5"
+    connections:
+      - token: ethereum|atn|0x3F0b455E1D785BE2CDE774eEee7806ABd7098c30
+    logoURI: /logos/solana.svg
+  
 options: {}

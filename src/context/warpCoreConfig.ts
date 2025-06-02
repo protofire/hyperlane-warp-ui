@@ -21,7 +21,7 @@ export function assembleWarpCoreConfig(): WarpCoreConfig {
 
   const configTokens = configValues.map((c) => c.tokens).flat();
   const tokens = dedupeTokens([...configTokens, ...configTs.tokens, ...configYaml.tokens]);
-
+  console.log(tokens);
   if (!tokens.length)
     throw new Error(
       'No warp route configs provided. Please check your registry, warp route whitelist, and custom route configs for issues.',

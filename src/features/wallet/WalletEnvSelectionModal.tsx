@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { ethereum } from '@hyperlane-xyz/registry';
+import { ethereum, solana } from '@hyperlane-xyz/registry';
 import { ProtocolType } from '@hyperlane-xyz/utils';
 
 import { ChainLogo } from '../../components/icons/ChainLogo';
@@ -27,14 +27,14 @@ export function WalletEnvSelectionModal({ isOpen, close }: { isOpen: boolean; cl
         >
           Ethereum
         </EnvButton>
-        {/* <EnvButton
+        <EnvButton
           onClick={onClickEnv(ProtocolType.Sealevel)}
           subTitle="a Solana"
           logoChainId={solana.chainId}
         >
           Solana
         </EnvButton>
-        <EnvButton
+        {/* <EnvButton
           onClick={onClickEnv(ProtocolType.Cosmos)}
           subTitle="a Cosmos"
           logo={<Image src={'/logos/cosmos.svg'} width={34} height={34} alt="" />}

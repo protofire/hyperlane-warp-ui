@@ -6,6 +6,7 @@ export const warpRouteWhitelist: Array<string> | null = [
   'ETH/atn-sepolia',
   'USD/atn-sepolia',
   'TATC/atn-sepolia',
+  'TWSOL/solana-testnet',
 ];
 // Example:
 // [
