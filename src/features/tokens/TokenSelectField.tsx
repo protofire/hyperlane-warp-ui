@@ -1,54 +1,38 @@
-import { useField, useFormikContext } from 'formik';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-
 import { IToken } from '@hyperlane-xyz/sdk';
-
+import { ChevronIcon } from '@hyperlane-xyz/widgets';
+import { useField, useFormikContext } from 'formik';
+import { useEffect, useState } from 'react';
 import { TokenIcon } from '../../components/icons/TokenIcon';
-import { getIndexForToken, getTokenByIndex, getWarpCore } from '../../context/context';
-import ChevronIcon from '../../images/icons/chevron-down.svg';
-import { TransferFormValues } from '../transfer/types';
 
+import { TransferFormValues } from '../transfer/types';
 import { TokenListModal } from './TokenListModal';
+import { getIndexForToken, getTokenByIndex, useWarpCore } from './hooks';
 
 type Props = {
   name: string;
   disabled?: boolean;
   setIsNft: (value: boolean) => void;
+  onChangeToken: (addressOrDenom: string) => void;
 };
 
-export function TokenSelectField({ name, disabled, setIsNft }: Props) {
+export function TokenSelectField({ name, disabled, setIsNft, onChangeToken }: Props) {
   const { values } = useFormikContext<TransferFormValues>();
   const [field, , helpers] = useField<number | undefined>(name);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAutomaticSelection, setIsAutomaticSelection] = useState(false);
 
+  const warpCore = useWarpCore();
+
   const { origin, destination } = values;
   useEffect(() => {
-    const tokensWithRoute = getWarpCore().getTokensForRoute(origin, destination);
-    let newFieldValue: number | undefined;
-    let newIsAutomatic: boolean;
-    // No tokens available for this route
-    if (tokensWithRoute.length === 0) {
-      newFieldValue = undefined;
-      newIsAutomatic = true;
-    }
-    // Exactly one found
-    else if (tokensWithRoute.length === 1) {
-      newFieldValue = getIndexForToken(tokensWithRoute[0]);
-      newIsAutomatic = true;
-      // Multiple possibilities
-    } else {
-      newFieldValue = undefined;
-      newIsAutomatic = false;
-    }
-    helpers.setValue(newFieldValue);
-    setIsAutomaticSelection(newIsAutomatic);
-  }, [origin, destination, helpers]);
+    const tokensWithRoute = warpCore.getTokensForRoute(origin, destination);
+    setIsAutomaticSelection(tokensWithRoute.length <= 1);
+  }, [warpCore, origin, destination, helpers]);
 
   const onSelectToken = (newToken: IToken) => {
     // Set the token address value in formik state
-    helpers.setValue(getIndexForToken(newToken));
+    helpers.setValue(getIndexForToken(warpCore, newToken));
+    onChangeToken(newToken.addressOrDenom);
     // Update nft state in parent
     setIsNft(newToken.isNft());
   };
@@ -60,7 +44,7 @@ export function TokenSelectField({ name, disabled, setIsNft }: Props) {
   return (
     <>
       <TokenButton
-        token={getTokenByIndex(field.value)}
+        token={getTokenByIndex(warpCore, field.value)}
         disabled={isAutomaticSelection || disabled}
         onClick={onClickField}
         isAutomatic={isAutomaticSelection}
@@ -99,13 +83,13 @@ function TokenButton({
           {token?.symbol || (isAutomatic ? 'No routes available' : 'Select Token')}
         </span>
       </div>
-      {!isAutomatic && <Image src={ChevronIcon} width={12} height={8} alt="" />}
+      {!isAutomatic && <ChevronIcon width={12} height={8} direction="s" />}
     </button>
   );
 }
 
 const styles = {
-  base: 'mt-1.5 w-full px-2.5 py-2 flex items-center justify-between text-sm rounded-full border border-black outline-none transition-colors duration-500',
-  enabled: 'hover:bg-gray-50 active:bg-gray-100 focus:border-black',
+  base: 'mt-1.5 w-full px-2.5 py-2.5 flex items-center justify-between text-sm rounded-lg border border-black outline-none transition-colors duration-500',
+  enabled: 'hover:bg-gray-50 active:scale-95 focus:border-black',
   disabled: 'bg-gray-100 cursor-default',
 };

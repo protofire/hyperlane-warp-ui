@@ -1,8 +1,6 @@
+import { IconButton, XCircleIcon } from '@hyperlane-xyz/widgets';
 import { useState } from 'react';
-
-import { IconButton } from '../../components/buttons/IconButton';
 import { config } from '../../consts/config';
-import XCircle from '../../images/icons/x-circle.svg';
 import { Card } from '../layout/Card';
 
 export function TipCard() {
@@ -32,12 +30,9 @@ export function TipCard() {
         </div>
       </div>
       <div className="absolute right-3 top-3">
-        <IconButton
-          imgSrc={XCircle}
-          onClick={() => setShow(false)}
-          title="Hide tip"
-          classes="hover:rotate-90"
-        />
+        <IconButton onClick={() => setShow(false)} title="Hide tip" className="hover:rotate-90">
+          <XCircleIcon width={16} height={16} />
+        </IconButton>
       </div>
     </Card>
   );

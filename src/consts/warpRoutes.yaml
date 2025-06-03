@@ -40,23 +40,25 @@ tokens:
     connections:
       - token: ethereum|atn|0x95C0E11356D90D498A7493D594Be7de4d85F8b49
     logoURI: /logos/eth.svg
-  - addressOrDenom: "0xEAFB5dEb2F0D0eECF5D5C72C44F7E99C1576751f"
+  - addressOrDenom: "0xB7EAa87298C52B5518617F6a0609f8E816222782"
     chainName: atn
-    connections:
-      - token: sealevel|solanatestnet|E5YXaiBmrREvePMXSLmXttci2dVwFM14CgyNYg5dkaM6
+    collateralAddressOrDenom: "0x22a79c7F77696f7Ecf161B2Ad4890eD759895aB4"
     decimals: 18
-    name: tAI3
-    standard: EvmHypNative
-    symbol: tAI3
+    name: TestWrappedSolanaToken
+    standard: EvmHypCollateral
+    symbol: TWSOL
+    connections:
+      - token: sealevel|solanatestnet|3AcxgpFp59vsZqVM9BNqT9VLoyiXr5k5XNnDCTdisKw5
     logoURI: /logos/tatc.svg
   - chainName: solanatestnet
     standard: SealevelHypSynthetic
     decimals: 9
     symbol: wtAI3
     name: TestWrappedAI3
-    addressOrDenom: "E5YXaiBmrREvePMXSLmXttci2dVwFM14CgyNYg5dkaM6"
+    addressOrDenom: "3AcxgpFp59vsZqVM9BNqT9VLoyiXr5k5XNnDCTdisKw5"
+    collateralAddressOrDenom: "CYU53sdp1RZfQbrby3m9SghmZoVQ6drqVo9FaZhKXHrb"
     connections:
-      - token: ethereum|atn|0xEAFB5dEb2F0D0eECF5D5C72C44F7E99C1576751f
+      - token: ethereum|atn|0xB7EAa87298C52B5518617F6a0609f8E816222782
     logoURI: /logos/solana.svg
   
 options: {}

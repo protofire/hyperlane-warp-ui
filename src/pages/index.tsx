@@ -1,13 +1,16 @@
 import type { NextPage } from 'next';
-
+import { FloatingButtonStrip } from '../components/nav/FloatingButtonStrip';
 import { TipCard } from '../components/tip/TipCard';
 import { TransferTokenCard } from '../features/transfer/TransferTokenCard';
 
 const Home: NextPage = () => {
   return (
-    <div className="pt-4 sm:pt-8 space-y-3">
+    <div className="space-y-3 pt-4">
       <TipCard />
-      <TransferTokenCard />
+      <div className="relative">
+        <TransferTokenCard />
+        <FloatingButtonStrip />
+      </div>
     </div>
   );
 };

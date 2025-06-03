@@ -1,33 +1,31 @@
+import { ChainSearchMenuProps, ChevronIcon } from '@hyperlane-xyz/widgets';
 import { useField, useFormikContext } from 'formik';
-import Image from 'next/image';
 import { useState } from 'react';
-
 import { ChainLogo } from '../../components/icons/ChainLogo';
-import ChevronIcon from '../../images/icons/chevron-down.svg';
 import { TransferFormValues } from '../transfer/types';
-
 import { ChainSelectListModal } from './ChainSelectModal';
-import { getChainDisplayName } from './utils';
+import { useChainDisplayName } from './hooks';
 
 type Props = {
   name: string;
   label: string;
-  chains: ChainName[];
-  onChange?: (id: ChainName) => void;
+  onChange?: (id: ChainName, fieldName: string) => void;
   disabled?: boolean;
+  customListItemField: ChainSearchMenuProps['customListItemField'];
 };
 
-export function ChainSelectField({ name, label, chains, onChange, disabled }: Props) {
+export function ChainSelectField({ name, label, onChange, disabled, customListItemField }: Props) {
   const [field, , helpers] = useField<ChainName>(name);
   const { setFieldValue } = useFormikContext<TransferFormValues>();
 
-  const handleChange = (newChainId: ChainName) => {
-    helpers.setValue(newChainId);
+  const displayName = useChainDisplayName(field.value, true);
+
+  const handleChange = (chainName: ChainName) => {
+    helpers.setValue(chainName);
     // Reset other fields on chain change
     setFieldValue('recipient', '');
     setFieldValue('amount', '');
-    setFieldValue('tokenIndex', undefined);
-    if (onChange) onChange(newChainId);
+    if (onChange) onChange(chainName, name);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,39 +35,38 @@ export function ChainSelectField({ name, label, chains, onChange, disabled }: Pr
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex flex-col items-center justify-center rounded-full bg-gray-100 h-[5.5rem] w-[5.5rem] p-1.5">
-        <div className="flex items-end h-11">
-          <ChainLogo chainName={field.value} size={34} />
-        </div>
-        <label htmlFor={name} className="mt-2 mb-1 text-sm text-gray-500 uppercase">
-          {label}
-        </label>
-      </div>
+    <div className="flex-[4]">
       <button
         type="button"
         name={field.name}
         className={`${styles.base} ${disabled ? styles.disabled : styles.enabled}`}
         onClick={onClick}
       >
-        <div className="flex items-center">
-          <ChainLogo chainName={field.value} size={14} />
-          <span className="ml-2">{getChainDisplayName(field.value, true)}</span>
+        <div className="flex items-center gap-3">
+          <div className="max-w-[1.4rem] sm:max-w-fit">
+            <ChainLogo chainName={field.value} size={32} />
+          </div>
+          <div className="flex flex-col items-start gap-1">
+            <label htmlFor={name} className="text-xs text-gray-600">
+              {label}
+            </label>
+            {displayName}
+          </div>
         </div>
-        <Image src={ChevronIcon} width={12} height={8} alt="" />
+        <ChevronIcon width={12} height={8} direction="s" />
       </button>
       <ChainSelectListModal
         isOpen={isModalOpen}
         close={() => setIsModalOpen(false)}
-        chains={chains}
         onSelect={handleChange}
+        customListItemField={customListItemField}
       />
     </div>
   );
 }
 
 const styles = {
-  base: 'w-48 px-2.5 py-2 relative -top-1.5 flex items-center justify-between text-sm bg-white rounded-full border border-black outline-none transition-colors duration-500',
-  enabled: 'hover:bg-gray-50 active:bg-gray-100 focus:border-black',
+  base: 'px-2 py-1.5 w-full flex items-center justify-between text-sm bg-white rounded-lg border border-black outline-none transition-colors duration-500',
+  enabled: 'hover:bg-gray-100 active:scale-95 focus:border-black',
   disabled: 'bg-gray-150 cursor-default',
 };

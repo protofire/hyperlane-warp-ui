@@ -80,19 +80,16 @@ const nextConfig = {
   },
 
   reactStrictMode: true,
-  swcMinify: true,
-
-  sentry: {
-    hideSourceMaps: true,
-    tunnelRoute: "/monitoring-tunnel",
-  },
+  
   output: "standalone",
 }
 
-const sentryWebpackPluginOptions = {
+const sentryOptions = {
   org: "hyperlane",
   project: "warp-ui",
   authToken: process.env.SENTRY_AUTH_TOKEN,
+  hideSourceMaps: true,
+  tunnelRoute: "/monitoring-tunnel",
   bundleSizeOptimizations: {
     excludeDebugStatements: true,
     excludeReplayIframe: true,
@@ -100,4 +97,4 @@ const sentryWebpackPluginOptions = {
   },
 };
 
-module.exports = withBundleAnalyzer(withSentryConfig(nextConfig, sentryWebpackPluginOptions));
+module.exports = withBundleAnalyzer(withSentryConfig(nextConfig, sentryOptions));

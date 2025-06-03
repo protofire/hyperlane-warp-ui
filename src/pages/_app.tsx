@@ -1,22 +1,21 @@
+import { useIsSsr } from '@hyperlane-xyz/widgets';
+import '@hyperlane-xyz/widgets/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
-import { ToastContainer, Zoom, toast } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'src/vendor/inpage-metamask';
-import 'src/vendor/polyfill';
-
-import '@hyperlane-xyz/widgets/styles.css';
-
 import { ErrorBoundary } from '../components/errors/ErrorBoundary';
 import { AppLayout } from '../components/layout/AppLayout';
-import { WarpContext } from '../context/WarpContext';
+import { MAIN_FONT } from '../consts/app';
+import { WarpContextInitGate } from '../features/WarpContextInitGate';
 import { CosmosWalletContext } from '../features/wallet/context/CosmosWalletContext';
 import { EvmWalletContext } from '../features/wallet/context/EvmWalletContext';
 import { SolanaWalletContext } from '../features/wallet/context/SolanaWalletContext';
-import '../styles/fonts.css';
+import { StarknetWalletContext } from '../features/wallet/context/StarknetWalletContext';
 import '../styles/globals.css';
-import { useIsSsr } from '../utils/ssr';
+import '../vendor/inpage-metamask';
+import '../vendor/polyfill';
 
 const reactQueryClient = new QueryClient({
   defaultOptions: {
@@ -28,33 +27,35 @@ const reactQueryClient = new QueryClient({
 
 export default function App({ Component, pageProps }: AppProps) {
   // Disable app SSR for now as it's not needed and
-  // complicates graphql integration
+  // complicates wallet and graphql integrations
   const isSsr = useIsSsr();
   if (isSsr) {
     return <div></div>;
   }
 
+  // Note, the font definition is required both here and in _document.tsx
+  // Otherwise Next.js will not load the font
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={reactQueryClient}>
-        <WarpContext>
-          <EvmWalletContext>
-            <SolanaWalletContext>
-              <CosmosWalletContext>
-                <AppLayout>
-                  <Component {...pageProps} />
-                  <Analytics />
-                </AppLayout>
-                <ToastContainer
-                  transition={Zoom}
-                  position={toast.POSITION.BOTTOM_RIGHT}
-                  limit={2}
-                />
-              </CosmosWalletContext>
-            </SolanaWalletContext>
-          </EvmWalletContext>
-        </WarpContext>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <div className={`${MAIN_FONT.variable} font-sans text-black`}>
+      <ErrorBoundary>
+        <QueryClientProvider client={reactQueryClient}>
+          <WarpContextInitGate>
+            <EvmWalletContext>
+              <SolanaWalletContext>
+                <CosmosWalletContext>
+                  <StarknetWalletContext>
+                    <AppLayout>
+                      <Component {...pageProps} />
+                      <Analytics />
+                    </AppLayout>
+                  </StarknetWalletContext>
+                </CosmosWalletContext>
+              </SolanaWalletContext>
+            </EvmWalletContext>
+          </WarpContextInitGate>
+        </QueryClientProvider>
+        <ToastContainer transition={Zoom} position="bottom-right" limit={2} />
+      </ErrorBoundary>
+    </div>
   );
 }
