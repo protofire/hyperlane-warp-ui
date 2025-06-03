@@ -1,3 +1,4 @@
+import { solanatestnet } from '@hyperlane-xyz/registry';
 import { ChainMap, ChainMetadata } from '@hyperlane-xyz/sdk';
 
 // A map of chain names to ChainMetadata
@@ -28,4 +29,8 @@ export const chains: ChainMap<ChainMetadata & { mailbox?: Address }> = {
   //   },
   //   logoURI: '/logo.svg',
   // },
+  solanatestnet: {
+    ...solanatestnet,
+    mailbox: '75HBBLae3ddeneJVrZeyrDfv6vb7SMC3aCpBucSXS5aR',
+  },
 };
