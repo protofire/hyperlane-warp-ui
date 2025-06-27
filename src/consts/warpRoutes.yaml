@@ -40,4 +40,42 @@ tokens:
     connections:
       - token: ethereum|atn|0x95C0E11356D90D498A7493D594Be7de4d85F8b49
     logoURI: /logos/eth.svg
+  - addressOrDenom: "0x47eb5AF91A6F221C40253BeBd169807F1D57E7DB"
+    chainName: atn
+    connections:
+      - token: ethereum|bsctestnet|0x5CdFE012Cecbc0aDa976C50b9588F351dA4fB555
+    decimals: 18
+    name: wtBNB
+    standard: EvmHypSynthetic
+    symbol: wtBNB
+    logoURI: /logos/bsc.svg
+  - addressOrDenom: "0x5CdFE012Cecbc0aDa976C50b9588F351dA4fB555"
+    chainName: bsctestnet
+    connections:
+      - token: ethereum|atn|0x47eb5AF91A6F221C40253BeBd169807F1D57E7DB
+    decimals: 18
+    name: tBNB
+    standard: EvmHypNative
+    symbol: tBNB
+    logoURI: /logos/bsc.svg
+  - addressOrDenom: "0x257127aFcBDc4c21428dD38F1647a3E3CdE762D1"
+    chainName: atn
+    connections:
+      - token: ethereum|bsctestnet|0xbdd48d8Ab72F24485DE5f6BD75fEa24337EF040F
+    decimals: 18
+    name: tAI3
+    standard: EvmHypNative
+    symbol: tAI3
+    logoURI: /logos/tatc.svg
+  - addressOrDenom: "0xbdd48d8Ab72F24485DE5f6BD75fEa24337EF040F"
+    chainName: bsctestnet
+    connections:
+      - token: ethereum|atn|0x257127aFcBDc4c21428dD38F1647a3E3CdE762D1
+    decimals: 18
+    name: wtAI3
+    standard: EvmHypSynthetic
+    symbol: wtAI3
+    logoURI: /logos/tatc.svg
+
+
 options: {}
