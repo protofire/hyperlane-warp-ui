@@ -15,8 +15,8 @@ import ProtofireLogo from '../../images/icons/protofire.svg';
 const footerLinks1 = [
   { title: 'Docs', url: links.docs, external: true },
   { title: 'Homepage', url: links.home, external: true },
-  { title: 'Explorer', url: links.explorer, external: true },
-  { title: 'Chains', url: links.chains, external: true },
+  // { title: 'Explorer', url: links.explorer, external: true },
+  // { title: 'Chains', url: links.chains, external: true },
 ];
 
 const footerLinks3 = [
