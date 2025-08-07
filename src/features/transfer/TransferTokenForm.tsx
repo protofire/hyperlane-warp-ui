@@ -116,7 +116,7 @@ function ChainSelectSection({ isReview }: { isReview: boolean }) {
     <div className="flex items-center justify-between w-full max-w-3xl mx-auto">
       <ChainSelectField name="origin" label="From" chains={chains} disabled={isReview} />
       <div className="flex flex-col items-center mx-4">
-        <div className="flex mb-6 space-x-2">
+        <div className="flex mb-12 space-x-2">
           <WideChevron classes="hidden sm:block" />
           <WideChevron />
           <WideChevron />
