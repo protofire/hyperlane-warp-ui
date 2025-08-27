@@ -4,42 +4,42 @@
 ---
 # yaml-language-server: $schema=../schema.json
 tokens:
-  # - chainName: amn
-  #   standard: EvmHypNative
-  #   decimals: 18
-  #   symbol: AI3
-  #   name: AI3
-  #   addressOrDenom: "0x38ED676d20C9b026A2372D3A88a0bcEE54de3851"
-  #   connections:
-  #     - token: ethereum|ethereum|0x363FCa95F23E10C76ef793D62d92d39e89d83AC1
-  #   logoURI: /logos/tatc.svg
-  # - chainName: ethereum
-  #   standard: EvmHypSynthetic
-  #   decimals: 18
-  #   symbol: WAI3
-  #   name: WAI3
-  #   addressOrDenom: "0x363FCa95F23E10C76ef793D62d92d39e89d83AC1"
-  #   connections:
-  #     - token: ethereum|amn|0x38ED676d20C9b026A2372D3A88a0bcEE54de3851
-  #   logoURI: /logos/tatc.svg
-  # - chainName: amn
-  #   standard: EvmHypSynthetic
-  #   decimals: 18
-  #   symbol: WETH
-  #   name: Wrapped ETH
-  #   addressOrDenom: "0x0539001D7BF886b147Ed92A5fd552cc9D4e80CE8"
-  #   connections:
-  #     - token: ethereum|ethereum|0x67051Bb2602793E1B183bC414aCdccEBAa224433
-  #   logoURI: /logos/eth.svg
-  # - chainName: ethereum
-  #   standard: EvmHypNative
-  #   decimals: 18
-  #   symbol: ETH
-  #   name: Ether
-  #   addressOrDenom: "0x67051Bb2602793E1B183bC414aCdccEBAa224433"
-  #   connections:
-  #     - token: ethereum|amn|0x0539001D7BF886b147Ed92A5fd552cc9D4e80CE8
-  #   logoURI: /logos/eth.svg
+  - chainName: amn
+    standard: EvmHypNative
+    decimals: 18
+    symbol: AI3
+    name: AI3
+    addressOrDenom: "0x38ED676d20C9b026A2372D3A88a0bcEE54de3851"
+    connections:
+      - token: ethereum|ethereum|0x363FCa95F23E10C76ef793D62d92d39e89d83AC1
+    logoURI: /logos/tatc.svg
+  - chainName: ethereum
+    standard: EvmHypSynthetic
+    decimals: 18
+    symbol: WAI3
+    name: WAI3
+    addressOrDenom: "0x363FCa95F23E10C76ef793D62d92d39e89d83AC1"
+    connections:
+      - token: ethereum|amn|0x38ED676d20C9b026A2372D3A88a0bcEE54de3851
+    logoURI: /logos/tatc.svg
+  - chainName: amn
+    standard: EvmHypSynthetic
+    decimals: 18
+    symbol: WETH
+    name: Wrapped ETH
+    addressOrDenom: "0x0539001D7BF886b147Ed92A5fd552cc9D4e80CE8"
+    connections:
+      - token: ethereum|ethereum|0x67051Bb2602793E1B183bC414aCdccEBAa224433
+    logoURI: /logos/eth.svg
+  - chainName: ethereum
+    standard: EvmHypNative
+    decimals: 18
+    symbol: ETH
+    name: Ether
+    addressOrDenom: "0x67051Bb2602793E1B183bC414aCdccEBAa224433"
+    connections:
+      - token: ethereum|amn|0x0539001D7BF886b147Ed92A5fd552cc9D4e80CE8
+    logoURI: /logos/eth.svg
 
 
 options: {}
