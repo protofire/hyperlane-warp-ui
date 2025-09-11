@@ -10,7 +10,7 @@ tokens:
     symbol: tAI3
     name: tAI3
     logoURI: /logos/tatc.svg
-    addressOrDenom: "0xb15B0C489215a26c455F593fDb5bf545559e3884"
+    addressOrDenom: '0xb15B0C489215a26c455F593fDb5bf545559e3884'
     connections:
       - token: ethereum|sepolia|0x258C5C9926f0cC73B97d987A459b461D712BFe77
   - chainName: sepolia
@@ -19,7 +19,7 @@ tokens:
     symbol: wtAI3
     name: wtAI3
     logoURI: /logos/tatc.svg
-    addressOrDenom: "0x258C5C9926f0cC73B97d987A459b461D712BFe77"
+    addressOrDenom: '0x258C5C9926f0cC73B97d987A459b461D712BFe77'
     connections:
       - token: ethereum|acn|0xb15B0C489215a26c455F593fDb5bf545559e3884
   - chainName: acn
@@ -28,7 +28,7 @@ tokens:
     symbol: tAI3
     name: tAI3
     logoURI: /logos/tatc.svg
-    addressOrDenom: "0x258C5C9926f0cC73B97d987A459b461D712BFe77"
+    addressOrDenom: '0x258C5C9926f0cC73B97d987A459b461D712BFe77'
     connections:
       - token: ethereum|bsctestnet|0xe4Cc17396D13f40e0B2bfE41bfe84cb7D427361C
   - chainName: bsctestnet
@@ -37,7 +37,7 @@ tokens:
     symbol: twAI3
     name: twAI3
     logoURI: /logos/tatc.svg
-    addressOrDenom: "0xe4Cc17396D13f40e0B2bfE41bfe84cb7D427361C"
+    addressOrDenom: '0xe4Cc17396D13f40e0B2bfE41bfe84cb7D427361C'
     connections:
       - token: ethereum|acn|0x258C5C9926f0cC73B97d987A459b461D712BFe77
   - chainName: acn
@@ -46,7 +46,7 @@ tokens:
     symbol: WBNB
     name: WBNB
     logoURI: /logos/bsc.svg
-    addressOrDenom: "0xb1Aa2690470A9302689b2B3c070C8937c063f28D"
+    addressOrDenom: '0xb1Aa2690470A9302689b2B3c070C8937c063f28D'
     connections:
       - token: ethereum|bsctestnet|0x6BE33cb2D56bFa8471Db953986898e1C0872BF38
   - chainName: bsctestnet
@@ -55,7 +55,7 @@ tokens:
     symbol: BNB
     name: BNB
     logoURI: /logos/bsc.svg
-    addressOrDenom: "0x6BE33cb2D56bFa8471Db953986898e1C0872BF38"
+    addressOrDenom: '0x6BE33cb2D56bFa8471Db953986898e1C0872BF38'
     connections:
       - token: ethereum|acn|0xb1Aa2690470A9302689b2B3c070C8937c063f28D
   - chainName: acn
@@ -64,7 +64,7 @@ tokens:
     symbol: WETH
     name: WETH
     logoURI: /logos/eth.svg
-    addressOrDenom: "0x2601056eCc40b13F68B68D96c827DffcDf1cB902"
+    addressOrDenom: '0x2601056eCc40b13F68B68D96c827DffcDf1cB902'
     connections:
       - token: ethereum|sepolia|0xb1Aa2690470A9302689b2B3c070C8937c063f28D
   - chainName: sepolia
@@ -73,9 +73,8 @@ tokens:
     symbol: ETH
     name: Ether
     logoURI: /logos/eth.svg
-    addressOrDenom: "0xb1Aa2690470A9302689b2B3c070C8937c063f28D"
+    addressOrDenom: '0xb1Aa2690470A9302689b2B3c070C8937c063f28D'
     connections:
       - token: ethereum|acn|0x2601056eCc40b13F68B68D96c827DffcDf1cB902
-
 
 options: {}

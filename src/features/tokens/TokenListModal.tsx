@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { IToken, TokenStandard } from '@hyperlane-xyz/sdk';
 
-import { toast } from 'react-toastify';
 import { TokenIcon } from '../../components/icons/TokenIcon';
 //import { TextInput } from '../../components/input/TextField';
 import { Modal } from '../../components/layout/Modal';
@@ -44,7 +44,7 @@ export function TokenListModal({
       close={onClose}
       width="max-w-100 sm:max-w-[31rem] min-h-[24rem]"
     >
-{/*       <TextInput
+      {/*       <TextInput
         value={search}
         onChange={setSearch}
         placeholder="Name, symbol, or address"
@@ -108,21 +108,21 @@ export function TokenList({
       toast.error('MetaMask is not installed');
       return;
     }
-  
+
     try {
       // Request access to the user's accounts
       await window.ethereum.request({ method: 'eth_requestAccounts' });
-  
+
       // Get the current network ID
       const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-  
+
       // Get the chain ID for the token's network
       const chainMetadata = tryGetChainMetadata(token.chainName);
       const tokenChainId = chainMetadata?.chainId;
 
       // Convert tokenChainId to hexadecimal and prefix with "0x"
-      const tokenChainIdHex = tokenChainId ? `0x${tokenChainId.toString(16)}` : "0x1";
-  
+      const tokenChainIdHex = tokenChainId ? `0x${tokenChainId.toString(16)}` : '0x1';
+
       // If the current network doesn't match the token's network, switch networks
       if (currentChainId !== tokenChainIdHex) {
         try {
@@ -139,7 +139,7 @@ export function TokenList({
           throw switchError;
         }
       }
-  
+
       // Add the token to MetaMask
       const wasAdded = await window.ethereum.request({
         method: 'wallet_watchAsset',
@@ -153,7 +153,7 @@ export function TokenList({
           },
         },
       });
-  
+
       if (wasAdded) {
         toast.success(`${token.symbol} added to MetaMask`);
       } else {
@@ -187,11 +187,15 @@ export function TokenList({
               </div>
               <div className="ml-2 text-left shrink-0">
                 <div className="text-sm w-14 truncate">{t.token.symbol || 'Unknown'}</div>
-                <div className="text-xs text-gray-500 w-14 truncate">{t.token.name || 'Unknown'}</div>
+                <div className="text-xs text-gray-500 w-14 truncate">
+                  {t.token.name || 'Unknown'}
+                </div>
               </div>
               <div className="ml-2 text-left shrink min-w-0">
                 <div className="text-xs w-full truncate">
-                  {t.token.standard != TokenStandard.EvmHypNative ? t.token.addressOrDenom : 'Native chain token'}
+                  {t.token.standard != TokenStandard.EvmHypNative
+                    ? t.token.addressOrDenom
+                    : 'Native chain token'}
                 </div>
                 <div className="mt-0.5 text-xs flex space-x-1">
                   <span>{`Decimals: ${t.token.decimals}`}</span>

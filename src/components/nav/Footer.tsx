@@ -3,14 +3,13 @@ import Link from 'next/link';
 
 import { links } from '../../consts/links';
 import FooterBg from '../../images/backgrounds/footer-bg.svg';
+import ProtofireLogo from '../../images/icons/protofire.svg';
 import { Color } from '../../styles/Color';
 import { Discord } from '../icons/Discord';
 import { Github } from '../icons/Github';
 import { HyperlaneLogo } from '../icons/HyperlaneLogo';
 import { Medium } from '../icons/Medium';
 import { Twitter } from '../icons/Twitter';
-
-import ProtofireLogo from '../../images/icons/protofire.svg';
 
 const footerLinks1 = [
   { title: 'Docs', url: links.docs, external: true },
@@ -49,17 +48,8 @@ export function Footer() {
               </a>
               <div className="flex items-center">
                 <span className="mr-2">by</span>
-                <a
-                  href="https://www.protofire.io/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src={ProtofireLogo}
-                    alt="Protofire"
-                    width={120}
-                    height={30}
-                  />
+                <a href="https://www.protofire.io/" target="_blank" rel="noopener noreferrer">
+                  <Image src={ProtofireLogo} alt="Protofire" width={120} height={30} />
                 </a>
               </div>
             </div>

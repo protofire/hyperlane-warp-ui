@@ -11,7 +11,6 @@ import { useIsSsr } from '../../utils/ssr';
 import { SideBarMenu } from './SideBarMenu';
 //import { WalletEnvSelectionModal } from './WalletEnvSelectionModal';
 import { useAccounts, useWalletDetails } from './hooks/multiProtocol';
-
 import { useConnectFns } from './hooks/multiProtocol';
 
 export function WalletControlBar() {
