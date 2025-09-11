@@ -20,10 +20,10 @@
 #     - http: http://127.0.0.1:8555
 acn:
   blockExplorers:
-    - apiUrl: https://blockscout.chronos.autonomys.xyz/api
+    - apiUrl: https://explorer.auto-evm.chronos.autonomys.xyz/api
       family: blockscout
       name: Autonomys Chronos Testnet Explorer
-      url: https://blockscout.chronos.autonomys.xyz
+      url: https://explorer.auto-evm.chronos.autonomys.xyz
   chainId: 8700
   displayName: Autonomys Chronos Testnet
   domainId: 8700
