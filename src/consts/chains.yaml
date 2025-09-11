@@ -18,22 +18,22 @@
 #   protocol: ethereum
 #   rpcUrls:
 #     - http: http://127.0.0.1:8555
-atn:
+acn:
   blockExplorers:
-    - apiUrl: https://blockscout.taurus.autonomys.xyz/api
+    - apiUrl: https://blockscout.chronos.autonomys.xyz/api
       family: blockscout
-      name: Autonomys Taurus Testnet Explorer
-      url: https://blockscout.taurus.autonomys.xyz
-  chainId: 490000
-  displayName: Autonomys Taurus Testnet
-  domainId: 490000
+      name: Autonomys Chronos Testnet Explorer
+      url: https://blockscout.chronos.autonomys.xyz
+  chainId: 8700
+  displayName: Autonomys Chronos Testnet
+  domainId: 8700
   isTestnet: true
-  name: atn
+  name: acn
   nativeToken:
     decimals: 18
     name: tAI3
     symbol: tAI3
   protocol: ethereum
   rpcUrls:
-    - http: https://auto-evm.taurus.autonomys.xyz/ws
+    - http: https://auto-evm.chronos.autonomys.xyz/ws
   logoURI: /logos/tatc.svg

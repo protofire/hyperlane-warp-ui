@@ -10,7 +10,7 @@ export function TipCard() {
   if (!show) return null;
   return (
     <Card className="w-full max-w-4xl mx-auto">
-      <h2 className="font-semibold text-black text-center sm:text-lg">Autonomys Taurus Testnet Bridge</h2>
+      <h2 className="font-semibold text-black text-center sm:text-lg">Autonomys Chronos Testnet Bridge</h2>
       <div className="flex flex-col items-center">
         <p className="text-center text-base sm:text-lg mb-2">Faucets:</p>
         <div className="flex justify-center space-x-4 text-xs sm:text-sm">
