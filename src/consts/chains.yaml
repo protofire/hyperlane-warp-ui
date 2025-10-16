@@ -30,7 +30,7 @@ bsc:
       family: etherscan
       name: BscScan
       url: https://bscscan.com
-  displayName: BSC
+  displayName: BNB Chain
   domainId: 56
   isTestnet: false
   name: bsc
