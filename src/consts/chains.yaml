@@ -22,3 +22,23 @@ amn:
   protocol: ethereum
   rpcUrls:
     - http: https://auto-evm.mainnet.autonomys.xyz/ws
+
+bsc:
+  chainId: 56
+  blockExplorers:
+    - apiUrl: https://bscscan.com/api
+      family: etherscan
+      name: BscScan
+      url: https://bscscan.com
+  displayName: BSC
+  domainId: 56
+  isTestnet: false
+  name: bsc
+  logoURI: /logos/bsc.svg
+  nativeToken:
+    decimals: 18
+    name: BNB
+    symbol: BNB
+  protocol: ethereum
+  rpcUrls:
+    - http: https://bsc.drpc.org
