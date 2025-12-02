@@ -1,14 +1,13 @@
+import { MultiProtocolProvider, Token, TokenAmount, WarpCore } from '@hyperlane-xyz/sdk';
+import { ProtocolType } from '@hyperlane-xyz/utils';
+import { AccountInfo, getAccountAddressAndPubKey } from '@hyperlane-xyz/widgets';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-
-import { TokenAmount } from '@hyperlane-xyz/sdk';
-import { ProtocolType } from '@hyperlane-xyz/utils';
-
-import { getWarpCore } from '../../context/context';
 import { logger } from '../../utils/logger';
-import { getChainMetadata } from '../chains/utils';
-import { getAccountAddressAndPubKey } from '../wallet/hooks/multiProtocol';
-import { AccountInfo } from '../wallet/hooks/types';
+import { useMultiProvider } from '../chains/hooks';
+import { isMultiCollateralLimitExceeded } from '../limits/utils';
+import { useWarpCore } from '../tokens/hooks';
+import { getLowestFeeTransferToken } from './fees';
 
 interface FetchMaxParams {
   accounts: Record<ProtocolType, AccountInfo>;
@@ -18,26 +17,57 @@ interface FetchMaxParams {
 }
 
 export function useFetchMaxAmount() {
+  const multiProvider = useMultiProvider();
+  const warpCore = useWarpCore();
+
   const mutation = useMutation({
-    mutationFn: (params: FetchMaxParams) => fetchMaxAmount(params),
+    mutationFn: (params: FetchMaxParams) => fetchMaxAmount(multiProvider, warpCore, params),
   });
-  return { fetchMaxAmount: mutation.mutateAsync, isLoading: mutation.isLoading };
+
+  return { fetchMaxAmount: mutation.mutateAsync, isLoading: mutation.isPending };
 }
 
-async function fetchMaxAmount({ accounts, balance, destination, origin }: FetchMaxParams) {
+async function fetchMaxAmount(
+  multiProvider: MultiProtocolProvider,
+  warpCore: WarpCore,
+  { accounts, balance, destination, origin }: FetchMaxParams,
+) {
   try {
-    const { address, publicKey } = getAccountAddressAndPubKey(origin, accounts);
+    const { address, publicKey } = getAccountAddressAndPubKey(multiProvider, origin, accounts);
     if (!address) return balance;
-    const maxAmount = await getWarpCore().getMaxTransferAmount({
-      balance,
+    const originToken = new Token(balance.token);
+    const destinationToken = originToken.getConnectionForChain(destination)?.token;
+    if (!destinationToken) return undefined;
+
+    const transferToken = await getLowestFeeTransferToken(
+      warpCore,
+      originToken,
+      destinationToken,
+      balance.amount.toString(),
+      address,
+      address,
+    );
+    const tokenAmount = new TokenAmount(balance.amount, transferToken);
+    const maxAmount = await warpCore.getMaxTransferAmount({
+      balance: tokenAmount,
       destination,
       sender: address,
       senderPubKey: await publicKey,
+      // defaulting to address here for recipient
+      recipient: address,
     });
+
+    const multiCollateralLimit = isMultiCollateralLimitExceeded(
+      maxAmount.token,
+      destination,
+      maxAmount.amount.toString(),
+    );
+    if (multiCollateralLimit) return new TokenAmount(multiCollateralLimit, maxAmount.token);
+
     return maxAmount;
   } catch (error) {
     logger.warn('Error fetching fee quotes for max amount', error);
-    const chainName = getChainMetadata(origin).displayName;
+    const chainName = multiProvider.tryGetChainMetadata(origin)?.displayName;
     toast.warn(`Cannot simulate transfer, ${chainName} native balance may be insufficient.`);
     return undefined;
   }

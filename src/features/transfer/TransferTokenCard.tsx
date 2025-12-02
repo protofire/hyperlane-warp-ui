@@ -1,8 +1,6 @@
-import { WideChevron } from '@hyperlane-xyz/widgets';
-
+import { WideChevronIcon } from '@hyperlane-xyz/widgets';
 import { Card } from '../../components/layout/Card';
 import { Color } from '../../styles/Color';
-
 import { TransferTokenForm } from './TransferTokenForm';
 
 export function TransferTokenCard() {
@@ -21,5 +19,29 @@ export function TransferTokenCard() {
         <TransferTokenForm />
       </>
     </Card>
+  );
+}
+
+function WideChevron({
+  direction,
+  height,
+  width,
+  rounded,
+  color,
+}: {
+  direction: 'n' | 'e' | 's' | 'w';
+  height?: string;
+  width?: string;
+  rounded?: boolean;
+  color?: string;
+}) {
+  return (
+    <WideChevronIcon
+      width={width}
+      height={height}
+      direction={direction}
+      color={color}
+      rounded={rounded}
+    />
   );
 }

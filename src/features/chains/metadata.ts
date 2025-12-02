@@ -1,102 +1,100 @@
-import type { AssetList, Chain as CosmosChain } from '@chain-registry/types';
-import type { Chain as WagmiChain } from '@wagmi/core';
+import { IRegistry, chainMetadata as publishedChainMetadata } from '@hyperlane-xyz/registry';
+import {
+  ChainMap,
+  ChainMetadata,
+  ChainMetadataSchema,
+  mergeChainMetadataMap,
+  RpcUrlSchema,
+} from '@hyperlane-xyz/sdk';
+import {
+  objFilter,
+  objMap,
+  promiseObjAll,
+  ProtocolType,
+  tryParseJsonOrYaml,
+} from '@hyperlane-xyz/utils';
+import { z } from 'zod';
+import { chains as ChainsTS } from '../../consts/chains.ts';
+import ChainsYaml from '../../consts/chains.yaml';
+import { config } from '../../consts/config.ts';
+import { links } from '../../consts/links.ts';
+import { logger } from '../../utils/logger.ts';
 
-import { ChainName, chainMetadataToWagmiChain } from '@hyperlane-xyz/sdk';
-import { ProtocolType } from '@hyperlane-xyz/utils';
+export async function assembleChainMetadata(
+  chainsInTokens: ChainName[],
+  registry: IRegistry,
+  storeMetadataOverrides?: ChainMap<Partial<ChainMetadata | undefined>>,
+) {
+  // Chains must include a cosmos chain or CosmosKit throws errors
+  const result = z.record(ChainMetadataSchema).safeParse({
+    ...ChainsYaml,
+    ...ChainsTS,
+  });
+  if (!result.success) {
+    logger.warn('Invalid chain metadata', result.error);
+    throw new Error(`Invalid chain metadata: ${result.error.toString()}`);
+  }
+  const filesystemMetadata = result.data as ChainMap<ChainMetadata>;
 
-import { getWarpContext } from '../../context/context';
+  let registryChainMetadata: ChainMap<ChainMetadata>;
+  if (config.registryUrl) {
+    try {
+      logger.debug('Using custom registry chain metadata from:', config.registryUrl);
+      registryChainMetadata = await registry.getMetadata();
+    } catch {
+      logger.debug(
+        'Failed fetching chain metadata from GH registry, using published registry',
+        config.registryUrl,
+      );
+      registryChainMetadata = publishedChainMetadata;
+    }
+  } else {
+    logger.debug('Using default published registry for chain metadata');
+    registryChainMetadata = publishedChainMetadata;
+  }
 
-// Metadata formatted for use in Wagmi config
-export function getWagmiChainConfig(): WagmiChain[] {
-  const evmChains = Object.values(getWarpContext().chains).filter(
-    (c) => !c.protocol || c.protocol === ProtocolType.Ethereum,
+  // Filter out chains that are not in the tokens config
+  registryChainMetadata = objFilter(registryChainMetadata, (c, m): m is ChainMetadata =>
+    chainsInTokens.includes(c),
   );
-  return evmChains.map(chainMetadataToWagmiChain);
-}
 
-export function getCosmosKitConfig(): { chains: CosmosChain[]; assets: AssetList[] } {
-  const cosmosChains = Object.values(getWarpContext().chains).filter(
-    (c) => c.protocol === ProtocolType.Cosmos,
+  // TODO have the registry do this automatically
+  registryChainMetadata = await promiseObjAll(
+    objMap(
+      registryChainMetadata,
+      async (chainName, metadata): Promise<ChainMetadata> => ({
+        ...metadata,
+        logoURI: `${links.imgPath}/chains/${chainName}/logo.svg`,
+      }),
+    ),
   );
-  const chains = cosmosChains.map((c) => ({
-    chain_name: c.name,
-    status: 'live',
-    network_type: c.isTestnet ? 'testnet' : 'mainnet',
-    pretty_name: c.displayName || c.name,
-    chain_id: c.chainId as string,
-    bech32_prefix: c.bech32Prefix!,
-    slip44: c.slip44!,
-    apis: {
-      rpc: [
-        {
-          address: c.rpcUrls[0].http,
-          provider: c.displayName || c.name,
-        },
-      ],
-      rest: c.restUrls
-        ? [
-            {
-              address: c.restUrls[0].http,
-              provider: c.displayName || c.name,
-            },
-          ]
-        : [],
-    },
-    fees: {
-      fee_tokens: [
-        {
-          denom: 'token',
-        },
-      ],
-    },
-    staking: {
-      staking_tokens: [
-        {
-          denom: 'stake',
-        },
-      ],
-    },
-  }));
-  const assets = cosmosChains.map((c) => {
-    if (!c.nativeToken) throw new Error(`Missing native token for ${c.name}`);
-    return {
-      chain_name: c.name,
-      assets: [
-        {
-          description: `The native token of ${c.displayName || c.name} chain.`,
-          denom_units: [
-            {
-              denom: 'token',
-              exponent: c.nativeToken.decimals,
-            },
-          ],
-          base: 'token',
-          name: 'token',
-          display: 'token',
-          symbol: 'token',
-        },
-        {
-          description: `The native token of ${c.displayName || c.name} chain.`,
-          denom_units: [
-            {
-              denom: 'token',
-              exponent: c.nativeToken.decimals,
-            },
-          ],
-          base: 'stake',
-          name: 'stake',
-          display: 'stake',
-          symbol: 'stake',
-        },
-      ],
-    };
+  const mergedChainMetadata = mergeChainMetadataMap(registryChainMetadata, filesystemMetadata);
+
+  const parsedRpcOverridesResult = tryParseJsonOrYaml(config.rpcOverrides);
+  const rpcOverrides = z
+    .record(RpcUrlSchema)
+    .safeParse(parsedRpcOverridesResult.success && parsedRpcOverridesResult.data);
+  if (config.rpcOverrides && !rpcOverrides.success) {
+    logger.warn('Invalid RPC overrides config', rpcOverrides.error);
+  }
+
+  const chainMetadata = objMap(mergedChainMetadata, (chainName, metadata) => {
+    const overridesUrl =
+      rpcOverrides.success && rpcOverrides.data[chainName]
+        ? rpcOverrides.data[chainName]
+        : undefined;
+
+    if (!overridesUrl) return metadata;
+
+    // Only EVM supports fallback transport, so we are putting the override at the end
+    const rpcUrls =
+      metadata.protocol === ProtocolType.Ethereum
+        ? [...metadata.rpcUrls, overridesUrl]
+        : [overridesUrl, ...metadata.rpcUrls];
+
+    return { ...metadata, rpcUrls };
   });
 
-  return { chains, assets };
-}
-
-export function getCosmosChainNames(): ChainName[] {
-  return Object.values(getWarpContext().chains)
-    .filter((c) => c.protocol === ProtocolType.Cosmos)
-    .map((c) => c.name);
+  const chainMetadataWithOverrides = mergeChainMetadataMap(chainMetadata, storeMetadataOverrides);
+  return { chainMetadata, chainMetadataWithOverrides };
 }

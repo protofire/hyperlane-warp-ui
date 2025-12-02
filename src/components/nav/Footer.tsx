@@ -1,41 +1,44 @@
+import { DiscordIcon, GithubIcon, HyperlaneLogo, TwitterIcon } from '@hyperlane-xyz/widgets';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { ReactNode } from 'react';
 import { links } from '../../consts/links';
-import FooterBg from '../../images/backgrounds/footer-bg.svg';
 import ProtofireLogo from '../../images/icons/protofire.svg';
 import { Color } from '../../styles/Color';
-import { Discord } from '../icons/Discord';
-import { Github } from '../icons/Github';
-import { HyperlaneLogo } from '../icons/HyperlaneLogo';
-import { Medium } from '../icons/Medium';
-import { Twitter } from '../icons/Twitter';
 
-const footerLinks1 = [
+type FooterLink = {
+  title: string;
+  url: string;
+  external: boolean;
+  icon?: ReactNode;
+};
+
+const footerLinks: FooterLink[] = [
   { title: 'Docs', url: links.docs, external: true },
+  { title: 'Terms', url: links.tos, external: true },
+  { title: 'Twitter', url: links.twitter, external: true, icon: <TwitterIcon color="#fff" /> },
   { title: 'Homepage', url: links.home, external: true },
+  { title: 'Privacy', url: links.privacyPolicy, external: true },
+  { title: 'Discord', url: links.discord, external: true, icon: <DiscordIcon color="#fff" /> },
   { title: 'Explorer', url: links.explorer, external: true },
-  { title: 'Chains', url: links.chains, external: true },
+  { title: 'Bounty', url: links.bounty, external: true },
+  { title: 'Github', url: links.github, external: true, icon: <GithubIcon color="#fff" /> },
 ];
 
-const footerLinks3 = [
-  { title: 'Twitter', url: links.twitter, external: true, icon: <Twitter fill="#fff" /> },
-  { title: 'Discord', url: links.discord, external: true, icon: <Discord fill="#fff" /> },
-  { title: 'Github', url: links.github, external: true, icon: <Github fill="#fff" /> },
-  { title: 'Blog', url: links.blog, external: true, icon: <Medium fill="#fff" /> },
-];
+const footerLinks1 = footerLinks.slice(0, 4);
+const footerLinks3 = footerLinks.slice(4);
 
 export function Footer() {
   return (
     <footer className="text-white relative">
-      <div className="relative w-full">
+      {/* <div className="relative w-full">
         <Image className="z-0 w-full" src={FooterBg} alt="" />
-      </div>
+      </div> */}
       <div className="relative z-10 px-8 pb-5 pt-2 sm:pt-0 bg-black">
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-10 items-center justify-between">
           <div className="flex items-center justify-center">
             <div className="ml-2 w-12 sm:w-16 h-12 sm:h-16">
-              <HyperlaneLogo fill={Color.primaryWhite} />
+              <HyperlaneLogo fill={Color.white} />
             </div>
             <div className="text-sm sm:text-base font-medium ml-6 space-y-1">
               <a
@@ -90,6 +93,6 @@ export function Footer() {
 }
 
 const styles = {
-  linkCol: 'flex flex-col gap-1.5',
-  linkItem: 'flex items-center capitalize text-decoration-none hover:underline underline-offset-2',
+  linkCol: 'flex flex-col gap-2',
+  linkItem: 'flex items-center hover:text-gray-300 transition-colors',
 };

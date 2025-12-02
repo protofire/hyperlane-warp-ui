@@ -1,68 +1,112 @@
+import { IToken } from '@hyperlane-xyz/sdk';
+import { ChainSearchMenuProps, ChevronIcon, PlusIcon } from '@hyperlane-xyz/widgets';
 import { useField, useFormikContext } from 'formik';
-import Image from 'next/image';
-import { useState } from 'react';
-
+import { useCallback, useState } from 'react';
+import { toast } from 'react-toastify';
 import { ChainLogo } from '../../components/icons/ChainLogo';
-import ChevronIcon from '../../images/icons/chevron-down.svg';
+import { logger } from '../../utils/logger';
+import { EVENT_NAME } from '../analytics/types';
+import { trackEvent } from '../analytics/utils';
+import { useAddToken } from '../tokens/hooks';
 import { TransferFormValues } from '../transfer/types';
-
 import { ChainSelectListModal } from './ChainSelectModal';
-import { getChainDisplayName } from './utils';
+import { useChainDisplayName, useMultiProvider } from './hooks';
+
+const USER_REJECTED_ERROR = 'User rejected';
 
 type Props = {
   name: string;
   label: string;
-  chains: ChainName[];
-  onChange?: (id: ChainName) => void;
+  onChange?: (id: ChainName, fieldName: string) => void;
   disabled?: boolean;
+  customListItemField: ChainSearchMenuProps['customListItemField'];
+  token?: IToken;
 };
 
-export function ChainSelectField({ name, label, chains, onChange, disabled }: Props) {
+export function ChainSelectField({
+  name,
+  label,
+  onChange,
+  disabled,
+  customListItemField,
+  token,
+}: Props) {
   const [field, , helpers] = useField<ChainName>(name);
   const { setFieldValue } = useFormikContext<TransferFormValues>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { addToken, canAddAsset, isLoading } = useAddToken(token);
+  const multiProvider = useMultiProvider();
 
-  const handleChange = (newChainId: ChainName) => {
-    helpers.setValue(newChainId);
+  const displayName = useChainDisplayName(field.value, true);
+
+  const handleChange = (chainName: ChainName) => {
+    const chainId = multiProvider.getChainId(chainName);
+    const previousChainId = multiProvider.getChainId(field.value);
+    trackEvent(EVENT_NAME.CHAIN_SELECTED, {
+      chainType: name,
+      chainId,
+      chainName,
+      previousChainId,
+      previousChainName: field.value,
+    });
+    helpers.setValue(chainName);
     // Reset other fields on chain change
     setFieldValue('recipient', '');
     setFieldValue('amount', '');
-    setFieldValue('tokenIndex', undefined);
-    if (onChange) onChange(newChainId);
+    if (onChange) onChange(chainName, name);
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onClick = () => {
     if (!disabled) setIsModalOpen(true);
   };
 
+  const onAddToken = useCallback(async () => {
+    try {
+      await addToken();
+    } catch (error: any) {
+      const errorDetails = error.message || error.toString();
+      if (!errorDetails.includes(USER_REJECTED_ERROR)) toast.error(errorDetails);
+      logger.debug(error);
+    }
+  }, [addToken]);
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex flex-col items-center justify-center rounded-full bg-gray-100 h-[5.5rem] w-[5.5rem] p-1.5">
-        <div className="flex items-end h-11">
-          <ChainLogo chainName={field.value} size={34} />
-        </div>
-        <label htmlFor={name} className="mt-2 mb-1 text-sm text-gray-500 uppercase">
-          {label}
-        </label>
-      </div>
+    <div className="h-[4.5rem] flex-[4]">
       <button
         type="button"
         name={field.name}
         className={`${styles.base} ${disabled ? styles.disabled : styles.enabled}`}
         onClick={onClick}
       >
-        <div className="flex items-center">
-          <ChainLogo chainName={field.value} size={14} />
-          <span className="ml-2">{getChainDisplayName(field.value, true)}</span>
+        <div className="flex items-center gap-3">
+          <div className="max-w-[1.4rem] sm:max-w-fit">
+            <ChainLogo chainName={field.value} size={32} />
+          </div>
+          <div className="flex flex-col items-start gap-1">
+            <label htmlFor={name} className="text-xs text-gray-600">
+              {label}
+            </label>
+            {displayName}
+          </div>
         </div>
-        <Image src={ChevronIcon} width={12} height={8} alt="" />
+        <ChevronIcon width={12} height={8} direction="s" />
       </button>
+      {canAddAsset && (
+        <button
+          type="button"
+          className={styles.addButton}
+          onClick={onAddToken}
+          disabled={isLoading}
+        >
+          <PlusIcon height={16} width={16} /> Import token to wallet
+        </button>
+      )}
+
       <ChainSelectListModal
         isOpen={isModalOpen}
         close={() => setIsModalOpen(false)}
-        chains={chains}
         onSelect={handleChange}
+        customListItemField={customListItemField}
       />
     </div>
   );
@@ -72,4 +116,6 @@ const styles = {
   base: 'w-48 px-2.5 py-2 relative -top-1.5 flex items-center justify-between text-sm bg-white rounded-full border border-black outline-none transition-colors duration-500',
   enabled: 'hover:bg-gray-50 active:bg-gray-100 focus:border-black',
   disabled: 'bg-gray-150 cursor-default',
+  addButton:
+    'flex text-xxs text-primary-500 hover:text-primary-600 disabled:text-gray-500 [&_path]:fill-primary-500 [&_path]:hover:fill-primary-600 [&_path]:disabled:fill-gray-500',
 };
