@@ -134,6 +134,7 @@ export function useAddToken(token?: IToken) {
     ? ADD_ASSET_SUPPORTED_PROTOCOLS.includes(token?.protocol)
     : false;
 
+
   const canAddAsset = token && isAccountReady && isSupportedProtocol;
 
   const { isPending, mutateAsync } = useMutation({
@@ -146,6 +147,15 @@ export function useAddToken(token?: IToken) {
 
       if (!activeChain.chainName)
         throw new Error('Not active chain found, please check if your wallet is connected ');
+
+      if (token.collateralAddressOrDenom) {
+        // Use the collateral address for collateralized tokens by creating a token object
+        const collateralToken = {
+          ...token,
+          addressOrDenom: token.collateralAddressOrDenom,
+        };
+        return addAsset(collateralToken, activeChain.chainName);
+      }
 
       return addAsset(token, activeChain.chainName);
     },

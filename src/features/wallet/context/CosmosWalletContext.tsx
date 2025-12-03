@@ -50,17 +50,18 @@ export function CosmosWalletContext({ children }: PropsWithChildren<unknown>) {
           signingCosmwasm: () => {
             return {
               // TODO cosmos get gas price from registry or RPC
-              gasPrice: GasPrice.fromString('0.03token'),
+              gasPrice: GasPrice.fromString('0.03token') as any,
             };
           },
           signingStargate: () => {
             return {
               // TODO cosmos get gas price from registry or RPC
-              gasPrice: GasPrice.fromString('0.2tia'),
+              gasPrice: GasPrice.fromString('0.2tia') as any,
             };
           },
         }}
         modalTheme={{ defaultTheme: 'light' }}
+        throwErrors={false}
       >
         {children}
       </ChainProvider>

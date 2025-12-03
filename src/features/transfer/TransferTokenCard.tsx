@@ -5,15 +5,15 @@ import { TransferTokenForm } from './TransferTokenForm';
 
 export function TransferTokenCard() {
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full">
       <>
-        <div className="absolute left-0 right-0 -top-36 xs:-top-[6.5rem] flex justify-center overflow-hidden z-10">
+        <div className="absolute hidden left-0 right-0 -top-20 sm:-top-28 md:-top-36 sm:flex justify-center overflow-hidden z-10">
           <WideChevron
             direction="s"
             height="100%"
             width="100"
             rounded={true}
-            color={Color.primaryBlue}
+            color={Color.black}
           />
         </div>
         <TransferTokenForm />

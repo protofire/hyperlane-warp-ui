@@ -13,4 +13,5 @@ export const Color = {
   primaryBlack: themeColors.black,
   primaryGray: themeColors.gray,
   primaryRed: themeColors.red,
+  primaryBlue: themeColors.blue,
 } as const;

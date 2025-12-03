@@ -7,12 +7,12 @@ export function TipCard() {
   const [show, setShow] = useState(config.showTipBox);
   if (!show) return null;
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full">
       <h2 className="font-semibold text-black text-center sm:text-lg">
         Autonomys Chronos Testnet Bridge
       </h2>
-      <div className="flex flex-col items-center">
-        <p className="text-center text-base sm:text-lg mb-2">Faucets:</p>
+      <div className="flex flex-row items-center justify-center gap-2">
+        <p className="text-center text-base sm:text-lg">Faucets:</p>
         <div className="flex justify-center space-x-4 text-xs sm:text-sm">
           <a
             href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"

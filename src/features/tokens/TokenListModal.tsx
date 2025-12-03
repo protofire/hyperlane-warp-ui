@@ -162,26 +162,29 @@ export function TokenList({
     <div className="no-scrollbar flex max-h-[80vh] min-h-[24rem] flex-col items-stretch overflow-auto px-2">
       {tokens.map((t, i) => (
         <button
-          className={`-mx-2 mb-2 flex items-center rounded px-2 py-2 ${
-            t.disabled ? 'opacity-50' : 'hover:bg-gray-200'
-          } duration-250 transition-all`}
+          className={`-mx-2 mb-2 flex items-start rounded px-3 py-3 ${t.disabled ? 'opacity-50' : 'hover:bg-gray-200'
+            } duration-250 transition-all`}
           key={i}
           type="button"
           disabled={t.disabled}
           onClick={() => onSelect(t.token)}
         >
           <div className="shrink-0">
-            <TokenIcon token={t.token} size={30} />
+            <TokenIcon token={t.token} size={32} />
           </div>
-          <div className="ml-2 shrink-0 text-left">
-            <div className="w-16 truncate text-sm">{t.token.symbol || 'Unknown'}</div>
-            <div className="w-16 truncate text-xs text-gray-500">{t.token.name || 'Unknown'}</div>
-          </div>
-          <div className="ml-2 min-w-0 shrink text-left">
-            <div className="w-full truncate text-xs">
-              {t.token.collateralAddressOrDenom || t.token.addressOrDenom || 'Native chain token'}
+          <div className="ml-3 flex min-w-0 flex-1 flex-col">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-shrink-0">
+                <div className="text-base font-medium">{t.token.symbol || 'Unknown'}</div>
+                <div className="text-sm text-gray-500">{t.token.name || 'Unknown'}</div>
+              </div>
+              <div className="min-w-0 flex-1 text-right">
+                <div className="truncate text-sm">
+                  {t.token.collateralAddressOrDenom || t.token.addressOrDenom || 'Native chain token'}
+                </div>
+              </div>
             </div>
-            <div className="mt-0.5 flex space-x-1 text-xs">
+            <div className="mt-1 flex gap-1 text-xs text-gray-500">
               <span>{`Decimals: ${t.token.decimals}`}</span>
               <span>-</span>
               <span>{`Chain: ${getChainDisplayName(multiProvider, t.token.chainName)}`}</span>
@@ -223,21 +226,21 @@ function UnsupportedRouteTokenList({
     ([symbol, { chains, tokenInformation }]) => (
       <React.Fragment key={symbol}>
         <button
-          className="duration-250 -mx-2 mb-2 flex items-center rounded px-2 py-2 opacity-50 transition-all hover:bg-gray-200"
+          className="duration-250 -mx-2 mb-2 flex items-start rounded px-3 py-3 opacity-50 transition-all hover:bg-gray-200"
           type="button"
           onClick={() => setOpen((prevSymbol) => (prevSymbol === symbol ? null : symbol))}
         >
           <div className="shrink-0">
-            <TokenIcon token={tokenInformation} size={30} />
+            <TokenIcon token={tokenInformation} size={32} />
           </div>
-          <div className="ml-2 shrink-0 text-left">
-            <div className="text-sm">{tokenInformation.symbol || 'Unknown'}</div>
-            <div className="text-xs text-gray-500">{tokenInformation.name || 'Unknown'}</div>
+          <div className="ml-3 min-w-0 flex-1 text-left">
+            <div className="text-base font-medium">{tokenInformation.symbol || 'Unknown'}</div>
+            <div className="text-sm text-gray-500">{tokenInformation.name || 'Unknown'}</div>
           </div>
           <Image
             src={InfoIcon}
             alt="Unsupported route for origin and destination"
-            className="ml-auto mr-1"
+            className="ml-2 shrink-0"
             data-te-toggle="tooltip"
             title={`Route not supported for ${getChainDisplayName(
               multiProvider,

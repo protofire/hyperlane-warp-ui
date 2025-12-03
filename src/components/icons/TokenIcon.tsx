@@ -2,7 +2,6 @@ import { IToken } from '@hyperlane-xyz/sdk';
 import { isHttpsUrl, isRelativeUrl } from '@hyperlane-xyz/utils';
 import { Circle } from '@hyperlane-xyz/widgets';
 import { useState } from 'react';
-import { links } from '../../consts/links';
 
 interface Props {
   token?: IToken | null;
@@ -41,6 +40,6 @@ function getImageSrc(token?: IToken | null) {
   if (!token?.logoURI) return null;
   if (isHttpsUrl(token.logoURI)) return token.logoURI;
   // Otherwise assume it's a relative URL to the registry base
-  if (isRelativeUrl(token.logoURI)) return `${links.imgPath}${token.logoURI}`;
+  if (isRelativeUrl(token.logoURI)) return `${window.location.origin}/${token.logoURI.startsWith('/') ? token.logoURI.substring(1) : token.logoURI}`;
   return null;
 }

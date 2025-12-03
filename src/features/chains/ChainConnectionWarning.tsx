@@ -56,8 +56,7 @@ export function ChainConnectionWarning({
       <ChainSelectListModal
         isOpen={isModalOpen}
         close={() => setIsModalOpen(false)}
-        onSelect={() => {}}
-        showChainDetails={unhealthyChain?.name}
+        onSelect={() => { }}
       />
     </>
   );

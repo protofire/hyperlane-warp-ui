@@ -110,13 +110,27 @@ Responsiveness
 @media only screen and (max-width: 479px) {
   /* phones */
   html {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 }
+
 @media only screen and (max-width: 359px) {
   /* small phones */
   html {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile-specific utility classes */
+@media only screen and (max-width: 640px) {
+  .mobile-px-comfortable {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-py-comfortable {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 }
 

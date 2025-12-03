@@ -25,7 +25,7 @@ acn:
       name: Autonomys Chronos Testnet Explorer
       url: https://explorer.auto-evm.chronos.autonomys.xyz
   chainId: 8700
-  displayName: Autonomys Chronos Testnet
+  displayName: Chronos Testnet
   domainId: 8700
   isTestnet: true
   name: acn

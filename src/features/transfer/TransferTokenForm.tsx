@@ -142,7 +142,7 @@ export function TransferTokenForm() {
         <Form className="flex w-full flex-col items-stretch">
           <WarningBanners />
           <ChainSelectSection isReview={isReview} />
-          <div className="mt-2.5 flex items-end justify-between space-x-4">
+          <div className="mt-3 sm:mt-2.5 flex items-end justify-between space-x-2 sm:space-x-4">
             <TokenSection setIsNft={setIsNft} isReview={isReview} />
             <AmountSection isNft={isNft} isReview={isReview} />
           </div>
@@ -176,14 +176,15 @@ function SwapChainsButton({
 }) {
   const { values, setFieldValue } = useFormikContext<TransferFormValues>();
   const { origin, destination } = values;
-  const selfAddressOrigin = useAccountAddressForChain(origin);
+  const multiProvider = useMultiProvider();
+  const selfAddressOrigin = useAccountAddressForChain(multiProvider, origin);
 
   const onClick = () => {
     if (disabled) return;
     setFieldValue('origin', destination);
     setFieldValue('destination', origin);
     // Reset other fields on chain change
-<<<<<<< HEAD
+
     setFieldValue('recipient', selfAddressOrigin);
     onSwapChain(destination, origin);
   };
@@ -251,7 +252,7 @@ function ChainSelectSection({ isReview }: { isReview: boolean }) {
   };
 
   return (
-    <div className="mt-2 flex items-center justify-between gap-4">
+    <div className="mt-2 flex items-center justify-between gap-2 sm:gap-4">
       <ChainSelectField
         name="origin"
         label="From"
@@ -260,7 +261,7 @@ function ChainSelectSection({ isReview }: { isReview: boolean }) {
         onChange={handleChange}
         token={originToken}
       />
-      <div className="flex flex-1 flex-col items-center">
+      <div className="flex flex-1 flex-col items-center px-1">
         <SwapChainsButton disabled={isReview} onSwapChain={onSwapChain} />
       </div>
       <ChainSelectField
@@ -339,9 +340,10 @@ function AmountSection({ isNft, isReview }: { isNft: boolean; isReview: boolean 
 
 function RecipientSection({ isReview }: { isReview: boolean }) {
   const { values, setFieldValue } = useFormikContext<TransferFormValues>();
+  const multiProvider = useMultiProvider();
   const { balance } = useDestinationBalance(values);
   const [isExpanded, setIsExpanded] = useState(false);
-  const selfAddress = useAccountAddressForChain(values.destination);
+  const selfAddress = useAccountAddressForChain(multiProvider, values.destination);
 
   useRecipientBalanceWatcher(values.recipient, balance);
 
@@ -368,7 +370,7 @@ function RecipientSection({ isReview }: { isReview: boolean }) {
           <TextField
             name="recipient"
             placeholder="0x123456..."
-            classes="w-full"
+            className="w-full"
             disabled={isReview}
           />
           <SelfButton disabled={isReview} />
@@ -528,9 +530,8 @@ function ButtonSection({
     return (
       <>
         <div
-          className={`mt-3 gap-2 bg-amber-400 px-4 text-sm ${
-            showWarning ? 'max-h-38 py-2' : 'max-h-0'
-          } overflow-hidden transition-all duration-500`}
+          className={`mt-3 gap-2 bg-amber-400 px-4 text-sm ${showWarning ? 'max-h-38 py-2' : 'max-h-0'
+            } overflow-hidden transition-all duration-500`}
         >
           <RecipientWarningBanner
             destinationChain={chainDisplayName}
@@ -553,9 +554,8 @@ function ButtonSection({
   return (
     <>
       <div
-        className={`mt-3 gap-2 bg-amber-400 px-4 text-sm ${
-          showWarning ? 'max-h-38 py-2' : 'max-h-0'
-        } overflow-hidden transition-all duration-500`}
+        className={`mt-3 gap-2 bg-amber-400 px-4 text-sm ${showWarning ? 'max-h-38 py-2' : 'max-h-0'
+          } overflow-hidden transition-all duration-500`}
       >
         <RecipientWarningBanner
           destinationChain={chainDisplayName}
@@ -569,7 +569,7 @@ function ButtonSection({
           type="button"
           color="black"
           onClick={onEdit}
-          classes="px-6 py-1.5"
+          className="px-6 py-1.5"
           icon={<ChevronIcon direction="w" width={10} height={6} color={Color.primaryBlack} />}
         >
           <span>Edit</span>
@@ -579,7 +579,7 @@ function ButtonSection({
           type="button"
           color="black"
           onClick={triggerTransactionsHandler}
-          classes="flex-1 px-3 py-1.5"
+          className="flex-1 px-3 py-1.5"
         >
           {`Send to ${chainDisplayName}`}
         </SolidButton>
@@ -610,7 +610,7 @@ function MaxButton({ balance, disabled }: { balance?: TokenAmount; disabled?: bo
       onClick={onClick}
       color="black"
       disabled={disabled}
-      className="absolute bottom-1 right-1 top-2.5 px-2 text-xs opacity-90 all:rounded"
+      className="absolute bottom-1 right-1 top-2.5 px-2 text-xs opacity-90 rounded-full"
     >
       {isLoading ? (
         <div className="flex items-center">
@@ -640,7 +640,7 @@ function SelfButton({ disabled }: { disabled?: boolean }) {
       onClick={onClick}
       color="primary"
       disabled={disabled}
-      className="absolute bottom-1 right-1 top-2.5 px-2 text-xs opacity-90 all:rounded"
+      className="absolute bottom-1 right-1 top-2.5 px-2 text-xs opacity-90 rounded-full"
     >
       Self
     </SolidButton>
@@ -727,9 +727,8 @@ function ReviewDetails({
       {!isReview && <FeeSectionButton visible={!isReview} fees={fees} isLoading={isLoading} />}
 
       <div
-        className={`${
-          isReview ? 'max-h-screen duration-1000 ease-in' : 'max-h-0 duration-500'
-        } overflow-hidden transition-all`}
+        className={`${isReview ? 'max-h-screen duration-1000 ease-in' : 'max-h-0 duration-500'
+          } overflow-hidden transition-all`}
       >
         <label className="mt-4 block pl-0.5 text-sm text-gray-600">Transactions</label>
         <div className="mt-1.5 space-y-2 break-all rounded border border-gray-400 bg-gray-150 px-2.5 py-2 text-sm">
@@ -773,25 +772,22 @@ function ReviewDetails({
                   {fees?.localQuote && fees.localQuote.amount > 0n && (
                     <p className="flex">
                       <span className="min-w-[7.5rem]">Local Gas (est.)</span>
-                      <span>{`${fees.localQuote.getDecimalFormattedAmount().toFixed(8) || '0'} ${
-                        fees.localQuote.token.symbol || ''
-                      }`}</span>
+                      <span>{`${fees.localQuote.getDecimalFormattedAmount().toFixed(8) || '0'} ${fees.localQuote.token.symbol || ''
+                        }`}</span>
                     </p>
                   )}
                   {fees?.interchainQuote && fees.interchainQuote.amount > 0n && (
                     <p className="flex">
                       <span className="min-w-[7.5rem]">Interchain Gas</span>
-                      <span>{`${fees.interchainQuote.getDecimalFormattedAmount().toFixed(8) || '0'} ${
-                        fees.interchainQuote.token.symbol || ''
-                      }`}</span>
+                      <span>{`${fees.interchainQuote.getDecimalFormattedAmount().toFixed(8) || '0'} ${fees.interchainQuote.token.symbol || ''
+                        }`}</span>
                     </p>
                   )}
                   {fees?.tokenFeeQuote && fees.tokenFeeQuote.amount > 0n && (
                     <p className="flex">
                       <span className="min-w-[7.5rem]">Token Fee</span>
-                      <span>{`${fees.tokenFeeQuote.getDecimalFormattedAmount().toFixed(8) || '0'} ${
-                        fees.tokenFeeQuote.token.symbol || ''
-                      }`}</span>
+                      <span>{`${fees.tokenFeeQuote.getDecimalFormattedAmount().toFixed(8) || '0'} ${fees.tokenFeeQuote.token.symbol || ''
+                        }`}</span>
                     </p>
                   )}
                 </div>
