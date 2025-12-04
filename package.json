@@ -91,12 +91,10 @@
   "scripts": {
     "clean": "rm -rf dist cache .next",
     "dev": "next dev",
-    "build": "next build && yarn build:standalone",
-    "build:standalone": "rm -rf .next/standalone/node_modules && ln -sf ../../node_modules .next/standalone/node_modules && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public",
+    "build": "next build",
     "typecheck": "tsc",
     "lint": "next lint",
     "start": "next start",
-    "start:standalone": "node .next/standalone/server.js",
     "test": "vitest --watch false",
     "prettier": "prettier --write ./src"
   },
