@@ -1,0 +1,16 @@
+node_modules
+.next
+dist
+cache
+.git
+.gitignore
+README.md
+.env*.local
+.vercel
+*.log
+.DS_Store
+.vscode
+.idea
+coverage
+.yarn/cache
+.yarn/install-state.gz
