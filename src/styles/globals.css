@@ -97,6 +97,32 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* Firefox autofill background color fix */
+input:-moz-autofill,
+input:-moz-autofill-preview {
+  filter: none;
+}
+
+/* Ensure consistent background and text color for all inputs in Firefox */
+input {
+  background-color: white;
+  color: #010101;
+}
+
+input:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Override Firefox autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #010101 !important;
+}
+
 input[type='date'],
 input[type='datetime'],
 input[type='datetime-local'] {
