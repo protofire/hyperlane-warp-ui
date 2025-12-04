@@ -91,7 +91,7 @@
   "scripts": {
     "clean": "rm -rf dist cache .next",
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && yarn build:standalone",
     "build:standalone": "rm -rf .next/standalone/node_modules && ln -sf ../../node_modules .next/standalone/node_modules && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public",
     "typecheck": "tsc",
     "lint": "next lint",
