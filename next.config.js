@@ -15,20 +15,40 @@ const FRAME_SRC_HOSTS = [
   'https://*.walletconnect.org',
   'https://cdn.solflare.com',
 ];
-const STYLE_SRC_HOSTS = [];
+const STYLE_SRC_HOSTS = ['https://fonts.googleapis.com'];
+const FONT_SRC_HOSTS = ['https://fonts.gstatic.com'];
 const IMG_SRC_HOSTS = [
   'https://*.walletconnect.com',
   'https://*.githubusercontent.com',
   'https://cdn.jsdelivr.net/gh/hyperlane-xyz/hyperlane-registry@main/',
 ];
 const SCRIPT_SRC_HOSTS = ['https://snaps.consensys.io'];
+// Connect sources needed for RPC, WalletConnect, APIs
+const CONNECT_SRC_HOSTS = [
+  'https://*.walletconnect.com',
+  'https://*.walletconnect.org',
+  'wss://*.walletconnect.com',
+  'wss://*.walletconnect.org',
+  'https://api.github.com',
+  'https://raw.githubusercontent.com',
+  'https://*.infura.io',
+  'https://*.alchemy.com',
+  'https://*.hyperlane.xyz',
+  'https://proxy.hyperlane.xyz',
+  'https://*.reown.com', // WalletConnect rebranded
+  'wss://*.reown.com',
+];
+// Note: 'unsafe-inline' and 'wasm-unsafe-eval' are required for MetaMask/wallet extensions
+// especially in Firefox. See: https://github.com/MetaMask/metamask-extension/issues/3133
+// SECURITY: 'unsafe-inline' for script-src is a trade-off for wallet compatibility.
+// Mitigations: strict input validation, no URL parameter reflection, regular audits.
 const cspHeader = `
   default-src 'self';
-  script-src 'self'${isDev ? " 'unsafe-eval' 'unsafe-inline'" : ''} ${SCRIPT_SRC_HOSTS.join(' ')};
+  script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' ${SCRIPT_SRC_HOSTS.join(' ')};
   style-src 'self' 'unsafe-inline' ${STYLE_SRC_HOSTS.join(' ')};
-  connect-src *;
+  connect-src 'self' ${CONNECT_SRC_HOSTS.join(' ')} https: wss:;
   img-src 'self' blob: data: ${IMG_SRC_HOSTS.join(' ')};
-  font-src 'self' data:;
+  font-src 'self' data: ${FONT_SRC_HOSTS.join(' ')};
   object-src 'none';
   base-uri 'self';
   form-action 'self';
