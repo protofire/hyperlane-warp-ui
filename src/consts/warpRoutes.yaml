@@ -80,7 +80,7 @@ tokens:
     standard: EvmHypCollateralFiat
     decimals: 6
     symbol: USDC.e
-    name: Bridged USDC (Autonomys Testnet)
+    name: Bridged USDC
     logoURI: /logos/usdc.svg
     addressOrDenom: "0x85902241d431b930E239a56A57B0524d9e509213"
     collateralAddressOrDenom: "0x0AF6075c5a8C73c24B82939F4DF46d7287291BAC"
