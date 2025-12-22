@@ -52,7 +52,7 @@ export function TokenListModal({
     <Modal
       isOpen={isOpen}
       close={onClose}
-      panelClassname="px-2 py-3 max-w-100 sm:max-w-[31rem] max-h-none overflow-auto"
+      panelClassname="px-2 py-3 max-w-100 sm:max-w-[32rem] max-h-none overflow-auto"
     >
       <SearchBar search={search} setSearch={setSearch} />
       <TokenList
@@ -172,18 +172,17 @@ export function TokenList({
           <div className="shrink-0">
             <TokenIcon token={t.token} size={32} />
           </div>
-          <div className="ml-3 flex min-w-0 flex-1 flex-col">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-shrink-0">
-                <div className="text-base font-medium">{t.token.symbol || 'Unknown'}</div>
-                <div className="text-sm text-gray-500">{t.token.name || 'Unknown'}</div>
-              </div>
-              <div className="min-w-0 flex-1 text-right">
-                <div className="truncate text-sm">
-                  {t.token.collateralAddressOrDenom || t.token.addressOrDenom || 'Native chain token'}
-                </div>
+          <div className="ml-3 flex min-w-0 flex-1 flex-col text-left">
+            {/* Row 1: Symbol + Address */}
+            <div className="flex items-baseline gap-3">
+              <div className="shrink-0 text-base font-medium">{t.token.symbol || 'Unknown'}</div>
+              <div className="min-w-0 flex-1 truncate text-sm text-gray-500">
+                {t.token.collateralAddressOrDenom || t.token.addressOrDenom || 'Native chain token'}
               </div>
             </div>
+            {/* Row 2: Token name */}
+            <div className="text-sm text-gray-500">{t.token.name || 'Unknown'}</div>
+            {/* Row 3: Decimals + Chain */}
             <div className="mt-1 flex gap-1 text-xs text-gray-500">
               <span>{`Decimals: ${t.token.decimals}`}</span>
               <span>-</span>

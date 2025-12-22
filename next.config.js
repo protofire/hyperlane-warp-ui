@@ -42,9 +42,10 @@ const CONNECT_SRC_HOSTS = [
 // especially in Firefox. See: https://github.com/MetaMask/metamask-extension/issues/3133
 // SECURITY: 'unsafe-inline' for script-src is a trade-off for wallet compatibility.
 // Mitigations: strict input validation, no URL parameter reflection, regular audits.
+// Dev mode requires 'unsafe-eval' for Next.js Hot Module Replacement (HMR).
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' ${SCRIPT_SRC_HOSTS.join(' ')};
+  script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ''} ${SCRIPT_SRC_HOSTS.join(' ')};
   style-src 'self' 'unsafe-inline' ${STYLE_SRC_HOSTS.join(' ')};
   connect-src 'self' ${CONNECT_SRC_HOSTS.join(' ')} https: wss:;
   img-src 'self' blob: data: ${IMG_SRC_HOSTS.join(' ')};
