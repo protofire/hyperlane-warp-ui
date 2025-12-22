@@ -77,23 +77,24 @@ tokens:
     connections:
       - token: ethereum|acn|0x2601056eCc40b13F68B68D96c827DffcDf1cB902
   - chainName: acn
-    standard: EvmHypSynthetic
+    standard: EvmHypCollateralFiat
     decimals: 6
-    symbol: USDCs
-    name: USDCs
+    symbol: USDC.e
+    name: Bridged USDC (Autonomys Testnet)
     logoURI: /logos/usdc.svg
-    addressOrDenom: "0x487E946557a947b0dDd8656ceaa1695bb6C9d55c"
+    addressOrDenom: "0x85902241d431b930E239a56A57B0524d9e509213"
+    collateralAddressOrDenom: "0x0AF6075c5a8C73c24B82939F4DF46d7287291BAC"
     connections:
-      - token: ethereum|sepolia|0xC97506EF4bF4F9C5FBdbB52FBdF48F368A22A7a6
+      - token: ethereum|sepolia|0x5F3c843b87a8CB7EC9279745f7E9BB7616D91567
   - chainName: sepolia
     standard: EvmHypCollateral
     decimals: 6
     symbol: USDC
     name: USD Coin
     logoURI: /logos/usdc.svg
-    addressOrDenom: "0xC97506EF4bF4F9C5FBdbB52FBdF48F368A22A7a6"
-    collateralAddressOrDenom: "0x98Eca74Be04e9be7438FF9E22DE9174D574a7E4C"
+    addressOrDenom: "0x5F3c843b87a8CB7EC9279745f7E9BB7616D91567"
+    collateralAddressOrDenom: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"
     connections:
-      - token: ethereum|acn|0x487E946557a947b0dDd8656ceaa1695bb6C9d55c
+      - token: ethereum|acn|0x85902241d431b930E239a56A57B0524d9e509213
 
 options: {}
