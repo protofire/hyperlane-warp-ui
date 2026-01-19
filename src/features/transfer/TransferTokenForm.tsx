@@ -2,13 +2,11 @@ import { Token, TokenAmount, WarpCore } from '@hyperlane-xyz/sdk';
 import {
   ProtocolType,
   convertToScaledAmount,
-  eqAddress,
   errorToString,
   fromWei,
   isNullish,
-  isValidAddressEvm,
   objKeys,
-  toWei,
+  toWei
 } from '@hyperlane-xyz/utils';
 import {
   AccountInfo,
@@ -68,7 +66,6 @@ import { TransferFormValues } from './types';
 import { useRecipientBalanceWatcher } from './useBalanceWatcher';
 import { useFeeQuotes } from './useFeeQuotes';
 import { useTokenTransfer } from './useTokenTransfer';
-import { isSmartContract } from './utils';
 
 export function TransferTokenForm() {
   const multiProvider = useMultiProvider();
@@ -430,58 +427,10 @@ function ButtonSection({
   });
 
   useEffect(() => {
-    const checkSameEVMRecipient = async (recipient: string) => {
-      if (!connectedWallet) {
-        // Hide warning banner if entering a recipient address and then disconnect wallet
-        setRecipientInfos({ showWarning: false, addressConfirmed: true });
-        return;
-      }
-
-      const { protocol: destinationProtocol } = multiProvider.getChainMetadata(values.destination);
-      const { protocol: sourceProtocol } = multiProvider.getChainMetadata(values.origin);
-
-      // Check if we are only dealing with bridging between two EVM chains
-      if (
-        sourceProtocol !== ProtocolType.Ethereum ||
-        destinationProtocol !== ProtocolType.Ethereum
-      ) {
-        setRecipientInfos({ showWarning: false, addressConfirmed: true });
-        return;
-      }
-
-      if (!isValidAddressEvm(recipient)) {
-        setRecipientInfos({ showWarning: false, addressConfirmed: true });
-        return;
-      }
-
-      // check first if the address on origin is a smart contract
-      const { isContract: isSenderSmartContract, error: senderCheckError } = await isSmartContract(
-        multiProvider,
-        values.origin,
-        connectedWallet,
-      );
-
-      const { isContract: isRecipientSmartContract, error: recipientCheckError } =
-        await isSmartContract(multiProvider, values.destination, recipient);
-
-      const isSelfRecipient = eqAddress(recipient, connectedWallet);
-
-      // Hide warning banners if entering a recipient address and then disconnect wallet
-      if (senderCheckError || recipientCheckError) {
-        toast.error(senderCheckError || recipientCheckError);
-        setRecipientInfos({ addressConfirmed: true, showWarning: false });
-        return;
-      }
-
-      if (isSelfRecipient && isSenderSmartContract && !isRecipientSmartContract) {
-        const msg = `The recipient address is the same as the connected wallet, but it does not exist as a smart contract on ${chainDisplayName}.`;
-        logger.warn(msg);
-        setRecipientInfos({ showWarning: true, addressConfirmed: false });
-      } else {
-        setRecipientInfos({ showWarning: false, addressConfirmed: true });
-      }
-    };
-    checkSameEVMRecipient(values.recipient);
+    // Smart contract wallet warning disabled - was triggering false positives for EOA users
+    // The warning was designed to alert users bridging from a smart contract wallet
+    // to an address that doesn't exist as a contract on the destination chain
+    setRecipientInfos({ showWarning: false, addressConfirmed: true });
   }, [
     values.recipient,
     connectedWallet,
@@ -705,9 +654,17 @@ function ReviewDetails({
     if (!feeQuotes) return null;
 
     const interchainQuote = getInterchainQuote(originToken, feeQuotes.interchainQuote);
+
+    // Apply gas multiplier to local quote for accurate fee display
+    const multiplier = config.gasLimitMultiplier;
+    const multipliedLocalAmount =
+      (feeQuotes.localQuote.amount * BigInt(Math.round(multiplier * 100))) / BigInt(100);
+    const adjustedLocalQuote = new TokenAmount(multipliedLocalAmount, feeQuotes.localQuote.token);
+
     const fees = {
       ...feeQuotes,
       interchainQuote: interchainQuote || feeQuotes.interchainQuote,
+      localQuote: adjustedLocalQuote,
     };
     const totalFees = getTotalFee({
       ...fees,

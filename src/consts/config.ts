@@ -39,6 +39,7 @@ interface Config {
   // Custom fields
   explorerApiKeys: Record<string, string>; // Optional map of API keys for block explorer
   withdrawalWhitelist: string; // comma-separated list of CAIP2 chain IDs to which transfers are supported
+  gasLimitMultiplier: number; // Multiplier applied to gas limit estimates for EVM transactions (e.g., 1.2 = 20% buffer)
 }
 
 export const config: Config = Object.freeze({
@@ -71,4 +72,5 @@ export const config: Config = Object.freeze({
   // Custom fields
   explorerApiKeys,
   withdrawalWhitelist,
+  gasLimitMultiplier: 2,
 });
