@@ -11,5 +11,5 @@ export const APP_NAME = 'Vana Bridge';
 export const APP_DESCRIPTION = 'Vana Bridge powered by Hyperlane';
 export const APP_URL = 'vana-bridge.protofire.io';
 export const BRAND_COLOR = Color.primary;
-export const BACKGROUND_COLOR = Color.primary;
+export const BACKGROUND_COLOR = '#2764c1';
 export const BACKGROUND_IMAGE = 'url(/backgrounds/main.svg)';

@@ -1,33 +1,67 @@
 /** @type {import('next').NextConfig} */
 
-const { version } = require('./package.json')
-const { withSentryConfig } = require("@sentry/nextjs");
+const { version } = require('./package.json');
+const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
-})
+});
 
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production';
 
 // Sometimes useful to disable this during development
 const ENABLE_CSP_HEADER = true;
-const FRAME_SRC_HOSTS = ['https://*.walletconnect.com', 'https://*.walletconnect.org','https://*.solflare.com'];
-const STYLE_SRC_HOSTS = []
-const IMG_SRC_HOSTS = ['https://*.walletconnect.com', 'https://*.githubusercontent.com'];
+const FRAME_SRC_HOSTS = [
+  'https://*.walletconnect.com',
+  'https://*.walletconnect.org',
+  'https://cdn.solflare.com',
+  'https://js.refiner.io',
+  'https://intercom-sheets.com',
+  'https://intercom-reporting.com',
+];
+const STYLE_SRC_HOSTS = ['https://js.refiner.io', 'https://storage.refiner.io'];
+const IMG_SRC_HOSTS = [
+  'https://*.walletconnect.com',
+  'https://*.githubusercontent.com',
+  'https://cdn.jsdelivr.net/gh/hyperlane-xyz/hyperlane-registry@main/',
+  'https://js.refiner.io',
+  'https://storage.refiner.io',
+  'https://js.intercomcdn.com',
+  'https://static.intercomassets.com',
+  'https://downloads.intercomcdn.com',
+  'https://uploads.intercomusercontent.com',
+  'https://gifs.intercomcdn.com',
+];
+const SCRIPT_SRC_HOSTS = [
+  'https://snaps.consensys.io',
+  'https://js.refiner.io',
+  'https://app.intercom.io',
+  'https://widget.intercom.io',
+  'https://js.intercomcdn.com',
+];
+const MEDIA_SRC_HOSTS = [
+  'https://js.refiner.io',
+  'https://storage.refiner.io',
+  'https://js.intercomcdn.com',
+  'https://downloads.intercomcdn.com',
+];
 const cspHeader = `
   default-src 'self';
-  script-src 'self'${isDev ? " 'unsafe-eval'" : ''};
+  script-src 'self'${isDev ? " 'unsafe-eval'" : ''} ${SCRIPT_SRC_HOSTS.join(' ')};
   style-src 'self' 'unsafe-inline' ${STYLE_SRC_HOSTS.join(' ')};
   connect-src *;
   img-src 'self' blob: data: ${IMG_SRC_HOSTS.join(' ')};
-  font-src 'self' data:;
+  font-src 'self' data: https://js.intercomcdn.com https://fonts.intercomcdn.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
   frame-src 'self' ${FRAME_SRC_HOSTS.join(' ')};
   frame-ancestors 'none';
+  media-src 'self' ${MEDIA_SRC_HOSTS.join(' ')};
   ${!isDev ? 'block-all-mixed-content;' : ''}
   ${!isDev ? 'upgrade-insecure-requests;' : ''}
-`.replace(/\s{2,}/g, ' ').trim();
+`
+  .replace(/\s{2,}/g, ' ')
+  .trim();
 
 const securityHeaders = [
   {
@@ -54,8 +88,8 @@ const securityHeaders = [
           value: cspHeader,
         },
       ]
-    : [])
-]
+    : []),
+];
 
 const nextConfig = {
   webpack(config) {
@@ -72,7 +106,7 @@ const nextConfig = {
         source: '/(.*)',
         headers: securityHeaders,
       },
-    ]
+    ];
   },
 
   env: {
@@ -81,14 +115,19 @@ const nextConfig = {
 
   reactStrictMode: true,
   output: "standalone",
+
+  typescript: {
+    // Ignore build errors from @safe-global/protocol-kit dependency
+    ignoreBuildErrors: true,
+  },
 }
 
 const sentryOptions = {
-  org: "hyperlane",
-  project: "warp-ui",
+  org: 'hyperlane',
+  project: 'warp-ui',
   authToken: process.env.SENTRY_AUTH_TOKEN,
   hideSourceMaps: true,
-  tunnelRoute: "/monitoring-tunnel",
+  tunnelRoute: '/monitoring-tunnel',
   bundleSizeOptimizations: {
     excludeDebugStatements: true,
     excludeReplayIframe: true,

@@ -12,4 +12,9 @@ export const links = {
   tos: 'https://www.vana.org/legal/terms-conditions',
   privacyPolicy: 'https://www.vana.org/legal/privacy-policy',
   dataHub: 'https://datahub.vana.com',
+  bounty:
+    'https://github.com/search?q=org:hyperlane-xyz+label:bounty+is:open+is:issue&type=issues&s=&o=desc',
+  imgPath: 'https://cdn.jsdelivr.net/gh/hyperlane-xyz/hyperlane-registry@main',
+  transferFees: 'https://docs.hyperlane.xyz/docs/protocol/core/fees#fee-estimation',
+  support: 'https://help.hyperlane.xyz/',
 };

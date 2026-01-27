@@ -19,6 +19,10 @@ export function getTransferStatusLabel(
     statusDescription = `Sign approve transaction in ${connectorName} to continue.`;
   else if (status === TransferStatus.ConfirmingApprove)
     statusDescription = 'Confirming approve transaction...';
+  else if (status === TransferStatus.SigningRevoke)
+    statusDescription = `Sign revoke transaction in ${connectorName} to continue.`;
+  else if (status === TransferStatus.ConfirmingRevoke)
+    statusDescription = 'Confirming revoke transaction...';
   else if (status === TransferStatus.SigningTransfer)
     statusDescription = `Sign transfer transaction in ${connectorName} to continue.`;
   else if (status === TransferStatus.ConfirmingTransfer)
@@ -71,8 +75,12 @@ import {
   MultiProtocolProvider,
   ProviderType,
   TypedTransactionReceipt,
+  ViemProvider,
 } from '@hyperlane-xyz/sdk';
+import { isValidAddressEvm } from '@hyperlane-xyz/utils';
+import { getAddress } from 'viem';
 import { logger } from '../../utils/logger';
+import { getChainDisplayName } from '../chains/utils';
 
 export function tryGetMsgIdFromTransferReceipt(
   multiProvider: MultiProtocolProvider,
@@ -82,6 +90,13 @@ export function tryGetMsgIdFromTransferReceipt(
   try {
     // IBC transfers have no message IDs
     if (receipt.type === ProviderType.CosmJs) return undefined;
+
+    if (receipt.type === ProviderType.Starknet) {
+      receipt = {
+        type: ProviderType.Starknet,
+        receipt: receipt.receipt as any,
+      };
+    }
 
     if (receipt.type === ProviderType.Viem) {
       // Massage viem type into ethers type because that's still what the
@@ -116,5 +131,54 @@ export function tryGetMsgIdFromTransferReceipt(
   } catch (error) {
     logger.error('Could not get msgId from transfer receipt', error);
     return undefined;
+  }
+}
+
+export async function isEvmContractAddress(
+  viemProvider: ViemProvider['provider'],
+  address: string,
+): Promise<
+  { isContractAddress: false; code: undefined } | { isContractAddress: true; code: string }
+> {
+  const code = await viemProvider.getCode({ address: getAddress(address) });
+  if (!code || code === '0x') {
+    return { isContractAddress: false, code: undefined };
+  }
+  return { isContractAddress: true, code };
+}
+
+const eip7702AccountSelector = '0xef0100';
+export async function isSmartContract(
+  multiProvider: MultiProtocolProvider,
+  chain: string,
+  address: string,
+): Promise<{ isContract: boolean; error?: string }> {
+  if (!isValidAddressEvm(address)) {
+    return { isContract: false };
+  }
+
+  try {
+    const provider = multiProvider.getViemProvider(chain);
+
+    if (!provider) {
+      throw new Error(`No viem provider for chain ${chain}`);
+    }
+
+    const { isContractAddress, code } = await isEvmContractAddress(provider, address);
+
+    if (!isContractAddress && !code) return { isContract: false };
+
+    // Checks if an address is also an EIP-7702 which is a smart account but not an smart contract
+    // It would technically be correct to check if the delegated contract address is also a valid
+    // contract address, but for our use case which is showing a banner to warn users
+    // if the address is a Smart Contract, this wouldn't be necessary since `0xef0100`
+    // is only reserved for Smart Accounts
+    if (code.startsWith(eip7702AccountSelector)) return { isContract: false };
+
+    return { isContract: true };
+  } catch (error) {
+    const msg = `Error checking if ${address} is a smart contract on ${getChainDisplayName(multiProvider, chain)}`;
+    logger.error(msg, error);
+    return { isContract: false, error: msg };
   }
 }

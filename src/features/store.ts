@@ -1,5 +1,18 @@
-import { GithubRegistry, IRegistry } from '@hyperlane-xyz/registry';
-import { ChainMap, ChainMetadata, MultiProtocolProvider, WarpCore } from '@hyperlane-xyz/sdk';
+import {
+  chainAddresses,
+  chainMetadata,
+  GithubRegistry,
+  IRegistry,
+  PartialRegistry,
+} from '@hyperlane-xyz/registry';
+import {
+  ChainMap,
+  ChainMetadata,
+  ChainName,
+  MultiProtocolProvider,
+  WarpCore,
+  WarpCoreConfig,
+} from '@hyperlane-xyz/sdk';
 import { objFilter } from '@hyperlane-xyz/utils';
 import { toast } from 'react-toastify';
 import { create } from 'zustand';
@@ -7,28 +20,38 @@ import { persist } from 'zustand/middleware';
 import { config } from '../consts/config';
 import { logger } from '../utils/logger';
 import { assembleChainMetadata } from './chains/metadata';
-import { assembleWarpCoreConfig } from './tokens/warpCoreConfig';
+import { TokenChainMap } from './tokens/types';
+import { assembleTokensBySymbolChainMap } from './tokens/utils';
 import { FinalTransferStatuses, TransferContext, TransferStatus } from './transfer/types';
+import { assembleWarpCoreConfig } from './warpCore/warpCoreConfig';
 
 // Increment this when persist state has breaking changes
 const PERSIST_STATE_VERSION = 2;
+
+interface WarpContext {
+  registry: IRegistry;
+  chainMetadata: ChainMap<ChainMetadata>;
+  multiProvider: MultiProtocolProvider;
+  warpCore: WarpCore;
+  tokensBySymbolChainMap: Record<string, TokenChainMap>;
+  routerAddressesByChainMap: Record<ChainName, Set<string>>;
+}
 
 // Keeping everything here for now as state is simple
 // Will refactor into slices as necessary
 export interface AppState {
   // Chains and providers
   chainMetadata: ChainMap<ChainMetadata>;
+  // Overrides to chain metadata set by user via the chain picker
   chainMetadataOverrides: ChainMap<Partial<ChainMetadata>>;
   setChainMetadataOverrides: (overrides?: ChainMap<Partial<ChainMetadata> | undefined>) => void;
+  // Overrides to warp core configs added by user
+  warpCoreConfigOverrides: WarpCoreConfig[];
+  setWarpCoreConfigOverrides: (overrides?: WarpCoreConfig[] | undefined) => void;
   multiProvider: MultiProtocolProvider;
   registry: IRegistry;
   warpCore: WarpCore;
-  setWarpContext: (context: {
-    registry: IRegistry;
-    chainMetadata: ChainMap<ChainMetadata>;
-    multiProvider: MultiProtocolProvider;
-    warpCore: WarpCore;
-  }) => void;
+  setWarpContext: (context: WarpContext) => void;
 
   // User history
   transfers: TransferContext[];
@@ -48,6 +71,13 @@ export interface AppState {
   setIsSideBarOpen: (isOpen: boolean) => void;
   showEnvSelectModal: boolean;
   setShowEnvSelectModal: (show: boolean) => void;
+
+  originChainName: ChainName;
+  setOriginChainName: (originChainName: ChainName) => void;
+  tokensBySymbolChainMap: Record<string, TokenChainMap>;
+  // this map is currently used by the transfer token form validation to prevent
+  // users from sending funds to a warp route address in a given destination chain
+  routerAddressesByChainMap: Record<ChainName, Set<string>>;
 }
 
 export const useStore = create<AppState>()(
@@ -61,9 +91,35 @@ export const useStore = create<AppState>()(
         overrides: ChainMap<Partial<ChainMetadata> | undefined> = {},
       ) => {
         logger.debug('Setting chain overrides in store');
-        const { multiProvider } = await initWarpContext(get().registry, overrides);
         const filtered = objFilter(overrides, (_, metadata) => !!metadata);
-        set({ chainMetadataOverrides: filtered, multiProvider });
+        const { multiProvider, warpCore, routerAddressesByChainMap, tokensBySymbolChainMap } =
+          await initWarpContext({
+            ...get(),
+            chainMetadataOverrides: filtered,
+          });
+        set({
+          chainMetadataOverrides: filtered,
+          multiProvider,
+          warpCore,
+          tokensBySymbolChainMap,
+          routerAddressesByChainMap,
+        });
+      },
+      warpCoreConfigOverrides: [],
+      setWarpCoreConfigOverrides: async (overrides: WarpCoreConfig[] | undefined = []) => {
+        logger.debug('Setting warp core config overrides in store');
+        const { multiProvider, warpCore, routerAddressesByChainMap, tokensBySymbolChainMap } =
+          await initWarpContext({
+            ...get(),
+            warpCoreConfigOverrides: overrides,
+          });
+        set({
+          warpCoreConfigOverrides: overrides,
+          multiProvider,
+          warpCore,
+          tokensBySymbolChainMap,
+          routerAddressesByChainMap,
+        });
       },
       multiProvider: new MultiProtocolProvider({}),
       registry: new GithubRegistry({
@@ -72,9 +128,9 @@ export const useStore = create<AppState>()(
         proxyUrl: config.registryProxyUrl,
       }),
       warpCore: new WarpCore(new MultiProtocolProvider({}), []),
-      setWarpContext: ({ registry, chainMetadata, multiProvider, warpCore }) => {
+      setWarpContext: (context) => {
         logger.debug('Setting warp context in store');
-        set({ registry, chainMetadata, multiProvider, warpCore });
+        set(context);
       },
 
       // User history
@@ -118,6 +174,12 @@ export const useStore = create<AppState>()(
       setShowEnvSelectModal: (showEnvSelectModal) => {
         set(() => ({ showEnvSelectModal }));
       },
+      originChainName: '',
+      setOriginChainName: (originChainName: ChainName) => {
+        set(() => ({ originChainName }));
+      },
+      tokensBySymbolChainMap: {},
+      routerAddressesByChainMap: {},
     }),
 
     // Store config
@@ -137,35 +199,62 @@ export const useStore = create<AppState>()(
             logger.error('Error during hydration', error);
             return;
           }
-          initWarpContext(state.registry, state.chainMetadataOverrides).then(
-            ({ registry, chainMetadata, multiProvider, warpCore }) => {
-              state.setWarpContext({ registry, chainMetadata, multiProvider, warpCore });
-              logger.debug('Rehydration complete');
-            },
-          );
+          initWarpContext(state).then((context) => {
+            state.setWarpContext(context);
+            logger.debug('Rehydration complete');
+          });
         };
       },
     },
   ),
 );
 
-async function initWarpContext(
-  registry: IRegistry,
-  storeMetadataOverrides: ChainMap<Partial<ChainMetadata> | undefined>,
-) {
+async function initWarpContext({
+  registry,
+  chainMetadataOverrides,
+  warpCoreConfigOverrides,
+}: {
+  registry: IRegistry;
+  chainMetadataOverrides: ChainMap<Partial<ChainMetadata> | undefined>;
+  warpCoreConfigOverrides: WarpCoreConfig[];
+}): Promise<WarpContext> {
+  let currentRegistry = registry;
   try {
-    const coreConfig = await assembleWarpCoreConfig();
-    const chainsInTokens = Array.from(new Set(coreConfig.tokens.map((t) => t.chainName)));
     // Pre-load registry content to avoid repeated requests
-    await registry.listRegistryContent();
+    await currentRegistry.listRegistryContent();
+  } catch (error) {
+    currentRegistry = new PartialRegistry({
+      chainAddresses: chainAddresses,
+      chainMetadata: chainMetadata,
+    });
+    logger.warn(
+      'Failed to list registry content using GithubRegistry, will continue with PartialRegistry.',
+      error,
+    );
+  }
+
+  try {
+    const coreConfig = await assembleWarpCoreConfig(warpCoreConfigOverrides, currentRegistry);
+
+    const chainsInTokens = Array.from(new Set(coreConfig.tokens.map((t) => t.chainName)));
     const { chainMetadata, chainMetadataWithOverrides } = await assembleChainMetadata(
       chainsInTokens,
-      registry,
-      storeMetadataOverrides,
+      currentRegistry,
+      chainMetadataOverrides,
     );
     const multiProvider = new MultiProtocolProvider(chainMetadataWithOverrides);
     const warpCore = WarpCore.FromConfig(multiProvider, coreConfig);
-    return { registry, chainMetadata, multiProvider, warpCore };
+
+    const tokensBySymbolChainMap = assembleTokensBySymbolChainMap(warpCore.tokens, multiProvider);
+    const routerAddressesByChainMap = getRouterAddressesByChain(coreConfig.tokens);
+    return {
+      registry: currentRegistry,
+      chainMetadata,
+      multiProvider,
+      warpCore,
+      tokensBySymbolChainMap,
+      routerAddressesByChainMap,
+    };
   } catch (error) {
     toast.error('Error initializing warp context. Please check connection status and configs.');
     logger.error('Error initializing warp context', error);
@@ -174,6 +263,20 @@ async function initWarpContext(
       chainMetadata: {},
       multiProvider: new MultiProtocolProvider({}),
       warpCore: new WarpCore(new MultiProtocolProvider({}), []),
+      tokensBySymbolChainMap: {},
+      routerAddressesByChainMap: {},
     };
   }
+}
+
+// this weird type (WarpCoreConfig['tokens']) is to match what is being used in dedupeTokens at assembleWarpCoreConfig.ts
+// returns a set with all the warp route addressOrDenom known to the registry
+function getRouterAddressesByChain(
+  tokens: WarpCoreConfig['tokens'],
+): Record<ChainName, Set<string>> {
+  return tokens.reduce<Record<ChainName, Set<string>>>((acc, token) => {
+    acc[token.chainName] ||= new Set<string>();
+    if (token.addressOrDenom) acc[token.chainName].add(token.addressOrDenom);
+    return acc;
+  }, {});
 }

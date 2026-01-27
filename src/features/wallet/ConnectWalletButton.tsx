@@ -6,8 +6,7 @@ import { useStore } from '../store';
 export function ConnectWalletButton() {
   const multiProvider = useMultiProvider();
 
-  const { /* setShowEnvSelectModal, */ setIsSideBarOpen } = useStore((s) => ({
-    //setShowEnvSelectModal: s.setShowEnvSelectModal,
+  const { setIsSideBarOpen } = useStore((s) => ({
     setIsSideBarOpen: s.setIsSideBarOpen,
   }));
 

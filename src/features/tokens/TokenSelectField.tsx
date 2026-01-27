@@ -1,11 +1,16 @@
 import { IToken } from '@hyperlane-xyz/sdk';
 import { ChevronIcon } from '@hyperlane-xyz/widgets';
 import { useField, useFormikContext } from 'formik';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { TokenIcon } from '../../components/icons/TokenIcon';
+
+import { WARP_QUERY_PARAMS } from '../../consts/args';
+import { updateQueryParam, updateQueryParams } from '../../utils/queryParams';
+import { trackTokenSelectionEvent } from '../analytics/utils';
+import { useMultiProvider } from '../chains/hooks';
 import { TransferFormValues } from '../transfer/types';
 import { TokenListModal } from './TokenListModal';
-import { getIndexForToken, getTokenByIndex, useWarpCore } from './hooks';
+import { getIndexForToken, getTokenByIndex, getTokenIndexFromChains, useWarpCore } from './hooks';
 
 type Props = {
   name: string;
@@ -14,52 +19,62 @@ type Props = {
 };
 
 export function TokenSelectField({ name, disabled, setIsNft }: Props) {
-  const { values } = useFormikContext<TransferFormValues>();
+  const { values, setValues } = useFormikContext<TransferFormValues>();
   const [field, , helpers] = useField<number | undefined>(name);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAutomaticSelection, setIsAutomaticSelection] = useState(false);
 
   const warpCore = useWarpCore();
+  const multiProvider = useMultiProvider();
 
   const { origin, destination } = values;
-  useEffect(() => {
+  const isAutomaticSelection = useMemo(() => {
     const tokensWithRoute = warpCore.getTokensForRoute(origin, destination);
-    let newFieldValue: number | undefined;
-    let newIsAutomatic: boolean;
-    // No tokens available for this route
-    if (tokensWithRoute.length === 0) {
-      newFieldValue = undefined;
-      newIsAutomatic = true;
-    }
-    // Exactly one found
-    else if (tokensWithRoute.length === 1) {
-      newFieldValue = getIndexForToken(warpCore, tokensWithRoute[0]);
-      newIsAutomatic = true;
-      // Multiple possibilities
-    } else {
-      newFieldValue = undefined;
-      newIsAutomatic = false;
-    }
-    helpers.setValue(newFieldValue);
-    setIsAutomaticSelection(newIsAutomatic);
-  }, [warpCore, origin, destination, helpers]);
+    return tokensWithRoute.length <= 1;
+  }, [warpCore, origin, destination]);
 
   const onSelectToken = (newToken: IToken) => {
     // Set the token address value in formik state
     helpers.setValue(getIndexForToken(warpCore, newToken));
+
+    // token selection event
+    trackTokenSelectionEvent(newToken, origin, destination, multiProvider);
+
+    updateQueryParam(WARP_QUERY_PARAMS.TOKEN, newToken.symbol);
     // Update nft state in parent
     setIsNft(newToken.isNft());
   };
 
   const onClickField = () => {
-    if (!disabled && !isAutomaticSelection) setIsModalOpen(true);
+    if (!disabled) setIsModalOpen(true);
+  };
+
+  // Set the token and origin from the selected field and the destination
+  // chain from the the first connection in the token
+  const onSelectUnsupportedRoute = (token: IToken, origin: string) => {
+    if (!token.connections) return;
+    const destination = token.connections[0].token.chainName;
+
+    // token selection event
+    trackTokenSelectionEvent(token, token.chainName, destination, multiProvider);
+
+    setValues({
+      ...values,
+      origin,
+      destination,
+      tokenIndex: getTokenIndexFromChains(warpCore, token.addressOrDenom, origin, destination),
+    });
+    updateQueryParams({
+      [WARP_QUERY_PARAMS.ORIGIN]: origin,
+      [WARP_QUERY_PARAMS.DESTINATION]: destination,
+      [WARP_QUERY_PARAMS.TOKEN]: token.symbol,
+    });
   };
 
   return (
     <>
       <TokenButton
         token={getTokenByIndex(warpCore, field.value)}
-        disabled={isAutomaticSelection || disabled}
+        disabled={disabled}
         onClick={onClickField}
         isAutomatic={isAutomaticSelection}
       />
@@ -69,6 +84,7 @@ export function TokenSelectField({ name, disabled, setIsNft }: Props) {
         onSelect={onSelectToken}
         origin={values.origin}
         destination={values.destination}
+        onSelectUnsupportedRoute={onSelectUnsupportedRoute}
       />
     </>
   );
@@ -97,7 +113,7 @@ function TokenButton({
           {token?.symbol || (isAutomatic ? 'No routes available' : 'Select Token')}
         </span>
       </div>
-      {!isAutomatic && <ChevronIcon width={12} height={8} direction="s" />}
+      <ChevronIcon width={12} height={8} direction="s" />
     </button>
   );
 }
