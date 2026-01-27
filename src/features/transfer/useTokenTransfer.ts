@@ -1,10 +1,17 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { TypedTransactionReceipt, WarpTxCategory } from '@hyperlane-xyz/sdk';
+import {
+  ProviderType,
+  TypedTransactionReceipt,
+  WarpTxCategory,
+  WarpTypedTransaction,
+} from '@hyperlane-xyz/sdk';
 import { toTitleCase, toWei } from '@hyperlane-xyz/utils';
+import { BigNumber } from 'ethers';
 
 import { toastTxSuccess } from '../../components/toast/TxSuccessToast';
+import { config } from '../../consts/config';
 import { getTokenByIndex, getWarpCore } from '../../context/context';
 import { logger } from '../../utils/logger';
 import { AppState, useStore } from '../store';
@@ -17,6 +24,68 @@ import {
 
 import { TransferContext, TransferFormValues, TransferStatus } from './types';
 import { tryGetMsgIdFromTransferReceipt } from './utils';
+
+// Default gas estimate for EVM transfer remote transactions (from SDK)
+const EVM_TRANSFER_REMOTE_GAS_ESTIMATE = 450000n;
+
+/**
+ * Apply gas limit multiplier to EVM transactions.
+ * Handles both legacy (gasLimit) and EIP-1559 transactions.
+ * Only modifies gasLimit, not gas prices (gasPrice, maxFeePerGas, maxPriorityFeePerGas).
+ * If gasLimit is not set, uses SDK's default EVM_TRANSFER_REMOTE_GAS_ESTIMATE.
+ */
+function applyGasLimitMultiplier(tx: WarpTypedTransaction): WarpTypedTransaction {
+  const multiplier = config.gasLimitMultiplier;
+
+  // Only apply to EVM transactions that have a transaction object
+  if (tx.type !== ProviderType.EthersV5 || !tx.transaction) {
+    return tx;
+  }
+
+  const transaction = tx.transaction as Record<string, unknown>;
+
+  // Get or use default gasLimit
+  let gasLimitBigInt: bigint;
+  const originalGasLimit = transaction.gasLimit;
+
+  if (originalGasLimit !== undefined && originalGasLimit !== null) {
+    // Handle different gasLimit types (BigNumber, bigint, number, string)
+    if (typeof originalGasLimit === 'bigint') {
+      gasLimitBigInt = originalGasLimit;
+    } else if (typeof originalGasLimit === 'number') {
+      gasLimitBigInt = BigInt(originalGasLimit);
+    } else if (typeof originalGasLimit === 'string') {
+      gasLimitBigInt = BigInt(originalGasLimit);
+    } else if (typeof originalGasLimit === 'object' && originalGasLimit !== null) {
+      // Handle ethers BigNumber (has toString method)
+      const bn = originalGasLimit as { toString: () => string };
+      gasLimitBigInt = BigInt(bn.toString());
+    } else {
+      logger.warn('Unknown gasLimit type, skipping multiplier');
+      return tx;
+    }
+  } else {
+    // gasLimit not set - use SDK's default estimate
+    gasLimitBigInt = EVM_TRANSFER_REMOTE_GAS_ESTIMATE;
+    logger.debug(`Using default gas estimate: ${gasLimitBigInt}`);
+  }
+
+  // Apply multiplier: multiply by (multiplier * 100) / 100 to handle decimals
+  const multiplied = (gasLimitBigInt * BigInt(Math.round(multiplier * 100))) / BigInt(100);
+
+  // Convert back to ethers BigNumber for SDK compatibility
+  const multipliedBN = BigNumber.from(multiplied.toString());
+
+  logger.debug(`Applied gas limit multiplier: ${gasLimitBigInt} -> ${multiplied} (${multiplier}x)`);
+
+  return {
+    ...tx,
+    transaction: {
+      ...transaction,
+      gasLimit: multipliedBN,
+    },
+  } as WarpTypedTransaction;
+}
 
 export function useTokenTransfer(onDone?: () => void) {
   const { transfers, addTransfer, updateTransferStatus } = useStore((s) => ({
@@ -141,9 +210,11 @@ async function executeTransfer({
     const hashes: string[] = [];
     let txReceipt: TypedTransactionReceipt | undefined = undefined;
     for (const tx of txs) {
+      // Apply gas limit multiplier to EVM transactions
+      const modifiedTx = applyGasLimitMultiplier(tx);
       updateTransferStatus(transferIndex, (transferStatus = txCategoryToStatuses[tx.category][0]));
       const { hash, confirm } = await sendTransaction({
-        tx,
+        tx: modifiedTx,
         chainName: origin,
         activeChainName: activeChain.chainName,
       });

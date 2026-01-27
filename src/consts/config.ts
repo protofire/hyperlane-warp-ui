@@ -20,6 +20,7 @@ interface Config {
   transferBlacklist: string; // comma-separated list of routes between which transfers are disabled. Expects Caip2Id-Caip2Id (e.g. ethereum:1-sealevel:1399811149)
   enableExplorerLink: boolean; // Include a link to the hyperlane explorer in the transfer modal
   addressBlacklist: string[]; // A list of addresses that are blacklisted and cannot be used in the app
+  gasLimitMultiplier: number; // Multiplier applied to gas limit for EVM transactions (e.g., 1.2 = 20% buffer)
 }
 
 export const config: Config = Object.freeze({
@@ -34,4 +35,5 @@ export const config: Config = Object.freeze({
   transferBlacklist,
   enableExplorerLink: false,
   addressBlacklist: ADDRESS_BLACKLIST.map((address) => address.toLowerCase()),
+  gasLimitMultiplier: 1.2,
 });
