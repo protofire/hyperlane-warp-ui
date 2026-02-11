@@ -72,5 +72,5 @@ export const config: Config = Object.freeze({
   // Custom fields
   explorerApiKeys,
   withdrawalWhitelist,
-  gasLimitMultiplier: 2,
+  gasLimitMultiplier: 1.2,
 });

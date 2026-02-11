@@ -3,37 +3,61 @@
 # Chains already in the SDK need not be included here unless you want to override some fields
 # Schema here: https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/typescript/sdk/src/metadata/chainMetadataTypes.ts
 ---
-# Example using local anvil chain:
-# anvil1:
-#   chainId: 31337
-#   domainId: 31337
-#   name: anvil1
-#   protocol: ethereum
-#   rpcUrls:
-#     - http: http://127.0.0.1:8545
-# anvil2:
-#   chainId: 31338
-#   domainId: 31338
-#   name: anvil2
-#   protocol: ethereum
-#   rpcUrls:
-#     - http: http://127.0.0.1:8555
-acn:
+amn:
+  chainId: 870
   blockExplorers:
-    - apiUrl: https://explorer.auto-evm.chronos.autonomys.xyz/api
+    - apiUrl: https://explorer.auto-evm.mainnet.autonomys.xyz/api
       family: blockscout
-      name: Autonomys Chronos Testnet Explorer
-      url: https://explorer.auto-evm.chronos.autonomys.xyz
-  chainId: 8700
-  displayName: Chronos Testnet
-  domainId: 8700
-  isTestnet: true
-  name: acn
+      name: Auto EVM Explorer
+      url: https://explorer.auto-evm.mainnet.autonomys.xyz
+  displayName: Auto EVM
+  domainId: 870
+  isTestnet: false
+  name: amn
+  logoURI: /logos/tatc.svg
   nativeToken:
     decimals: 18
-    name: tAI3
-    symbol: tAI3
+    name: AI3
+    symbol: AI3
   protocol: ethereum
   rpcUrls:
-    - http: https://auto-evm.chronos.autonomys.xyz/ws
-  logoURI: /logos/tatc.svg
+    - http: https://auto-evm.mainnet.autonomys.xyz/ws
+
+ethereum:
+  chainId: 1
+  domainId: 1
+  name: ethereum
+  displayName: Ethereum
+  isTestnet: false
+  protocol: ethereum
+  nativeToken:
+    decimals: 18
+    name: Ether
+    symbol: ETH
+  rpcUrls:
+    - http: https://ethereum-rpc.publicnode.com
+  blockExplorers:
+    - apiUrl: https://api.etherscan.io/api
+      family: etherscan
+      name: Etherscan
+      url: https://etherscan.io
+
+bsc:
+  chainId: 56
+  blockExplorers:
+    - apiUrl: https://bscscan.com/api
+      family: etherscan
+      name: BscScan
+      url: https://bscscan.com
+  displayName: BNB Chain
+  domainId: 56
+  isTestnet: false
+  name: bsc
+  logoURI: /logos/bsc.svg
+  nativeToken:
+    decimals: 18
+    name: BNB
+    symbol: BNB
+  protocol: ethereum
+  rpcUrls:
+    - http: https://bsc.drpc.org
