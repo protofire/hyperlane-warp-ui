@@ -76,6 +76,26 @@ tokens:
     connections:
       - token: ethereum|amn|0x94D72DFE3d977217eB7C936C6762A6E5457f82Fb
     logoURI: /logos/bsc.svg
+  - chainName: amn
+    standard: EvmHypCollateralFiat
+    decimals: 6
+    symbol: USDC.e
+    name: Bridged USDC (Autonomys)
+    addressOrDenom: "0x98d0238e245CeFBD8846821D8CDdB0593ef32ec6"
+    collateralAddressOrDenom: "0xD80173DB7651f8f820180AEa0ca6C1c1C0D4F19A"
+    connections:
+      - token: ethereum|ethereum|0xa4f50a4263706314131336F643699FD6FD97309F
+    logoURI: /logos/usdc.svg
+  - chainName: ethereum
+    standard: EvmHypCollateral
+    decimals: 6
+    symbol: USDC
+    name: USD Coin
+    addressOrDenom: "0xa4f50a4263706314131336F643699FD6FD97309F"
+    collateralAddressOrDenom: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    connections:
+      - token: ethereum|amn|0x98d0238e245CeFBD8846821D8CDdB0593ef32ec6
+    logoURI: /logos/usdc.svg
 
 
 options: {}
