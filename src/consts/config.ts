@@ -40,6 +40,7 @@ interface Config {
   explorerApiKeys: Record<string, string>; // Optional map of API keys for block explorer
   withdrawalWhitelist: string; // comma-separated list of CAIP2 chain IDs to which transfers are supported
   gasLimitMultiplier: number; // Multiplier applied to gas limit estimates for EVM transactions (e.g., 1.2 = 20% buffer)
+  gasPriceMultiplier: number; // Multiplier applied to gas price estimates for EVM transactions (e.g., 1.5 = 50% buffer)
 }
 
 export const config: Config = Object.freeze({
@@ -61,7 +62,7 @@ export const config: Config = Object.freeze({
   walletConnectProjectId,
   walletProtocols: [
     ProtocolType.Ethereum,
-    // ProtocolType.Sealevel,
+    ProtocolType.Sealevel,
     // ProtocolType.Cosmos,
     // ProtocolType.Starknet,
     // ProtocolType.Radix,
@@ -73,4 +74,5 @@ export const config: Config = Object.freeze({
   explorerApiKeys,
   withdrawalWhitelist,
   gasLimitMultiplier: 2,
+  gasPriceMultiplier: 1.5,
 });

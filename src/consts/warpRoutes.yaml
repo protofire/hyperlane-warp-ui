@@ -31,6 +31,7 @@ tokens:
     addressOrDenom: '0x258C5C9926f0cC73B97d987A459b461D712BFe77'
     connections:
       - token: ethereum|bsctestnet|0xe4Cc17396D13f40e0B2bfE41bfe84cb7D427361C
+      - token: sealevel|solanatestnet|4vbj4Lrd2PH2nFNVTzwsjg9pRPQLG2G9Qq4yrBom1rAL
   - chainName: bsctestnet
     standard: EvmHypSynthetic
     decimals: 18
@@ -96,5 +97,43 @@ tokens:
     collateralAddressOrDenom: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"
     connections:
       - token: ethereum|acn|0x85902241d431b930E239a56A57B0524d9e509213
+
+  # ──────────────────────────────────────────────
+  # tAI3: ACN native <-> Solana synthetic
+  # ──────────────────────────────────────────────
+  - chainName: solanatestnet
+    standard: SealevelHypSynthetic
+    decimals: 9
+    symbol: tAI3
+    name: tAI3
+    logoURI: /logos/tatc.svg
+    addressOrDenom: '4vbj4Lrd2PH2nFNVTzwsjg9pRPQLG2G9Qq4yrBom1rAL'
+    collateralAddressOrDenom: '2mSqP95VJd8HnggSTvp7bTixoDbWayaPq4Adqn353fwv'
+    connections:
+      - token: ethereum|acn|0x258C5C9926f0cC73B97d987A459b461D712BFe77
+
+  # ──────────────────────────────────────────────
+  # wSOL: Solana native <-> ACN synthetic
+  # ──────────────────────────────────────────────
+  - chainName: solanatestnet
+    standard: SealevelHypNative
+    decimals: 9
+    symbol: SOL
+    name: SOL
+    logoURI: /logos/solana.svg
+    addressOrDenom: '2qBK6eKCcgku5FJTuspH7nNh7bAZW14qH7HBjZrta2vd'
+    collateralAddressOrDenom: 'So11111111111111111111111111111111111111112'
+    connections:
+      - token: ethereum|acn|0xC2D4A432D83d5053e6Efe372d60431b752317ea2
+
+  - chainName: acn
+    standard: EvmHypSynthetic
+    decimals: 9
+    symbol: wSOL
+    name: Wrapped SOL
+    logoURI: /logos/solana.svg
+    addressOrDenom: '0xC2D4A432D83d5053e6Efe372d60431b752317ea2'
+    connections:
+      - token: sealevel|solanatestnet|2qBK6eKCcgku5FJTuspH7nNh7bAZW14qH7HBjZrta2vd
 
 options: {}

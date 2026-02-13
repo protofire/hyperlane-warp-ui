@@ -37,3 +37,23 @@ acn:
   rpcUrls:
     - http: https://auto-evm.chronos.autonomys.xyz/ws
   logoURI: /logos/tatc.svg
+
+solanatestnet:
+  blockExplorers:
+    - apiUrl: https://explorer.solana.com
+      family: other
+      name: Solana Explorer
+      url: https://explorer.solana.com/?cluster=testnet
+  chainId: 1399811150
+  displayName: Solana Testnet
+  domainId: 1399811150
+  isTestnet: true
+  name: solanatestnet
+  nativeToken:
+    decimals: 9
+    name: SOL
+    symbol: SOL
+  protocol: sealevel
+  rpcUrls:
+    - http: https://api.testnet.solana.com
+  logoURI: /logos/solana.svg
