@@ -1,0 +1,14 @@
+{
+  "name": "AI3",
+  "symbol": "AI3",
+  "description": "AI3 token from Autonomys Network, bridged to Solana via Hyperlane. Backed 1:1 by AI3 locked on Autonomys mainnet (domain 870).",
+  "image": "https://raw.githubusercontent.com/protofire/hyperlane-warp-ui/4850c331139d0c911eeb0d7208019b8533df0985/public/logo.png",
+  "website": "https://www.autonomys.xyz",
+  "attributes": [
+    ["origin_chain", "Autonomys Mainnet"],
+    ["origin_chain_id", "870"],
+    ["bridge", "Hyperlane"],
+    ["wrapped_token_type", "synthetic"],
+    ["remote_decimals", "18"]
+  ]
+}
