@@ -81,4 +81,5 @@ solanamainnet:
     symbol: SOL
   protocol: sealevel
   rpcUrls:
+    - http: https://api.mainnet-beta.solana.com
     - http: https://api.mainnet.solana.com
