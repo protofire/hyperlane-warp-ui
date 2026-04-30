@@ -119,7 +119,7 @@ tokens:
   - chainName: solanamainnet
     standard: SealevelHypSynthetic
     decimals: 9
-    symbol: wAI3
+    symbol: WAI3
     name: Wrapped AI3
     logoURI: /logos/tatc.svg
     addressOrDenom: 8HhMERjk5pXpA4Zmv9y68z5jaWd7qoZg3qtY8cGC3V4Z
