@@ -2,7 +2,6 @@ import {
   eclipsemainnet,
   eclipsemainnetAddresses,
   solanamainnet,
-  solanamainnetAddresses,
   solaxy,
   solaxyAddresses,
   sonicsvm,
@@ -12,6 +11,19 @@ import {
 } from '@hyperlane-xyz/registry';
 import { ChainMap, ChainMetadata } from '@hyperlane-xyz/sdk';
 
+// Override registry's canonical Hyperlane Labs solanamainnet core with the AMN⇄Solana
+// bridge's private deployment. The registry ships canonical Hyperlane addresses, but this
+// bridge runs its own Solana core (Phase B; see deployments/autonomys-solana-mainnet/LEDGER.md).
+// Warp programs (Fspt3tEJ… SOL, and AI3 once D.1 lands) bake `mailbox = H9fQ4J…` into their
+// PDA and reject anything else with IncorrectProgramId (processor.rs:308-311).
+const solanamainnetAddresses = {
+  mailbox: 'H9fQ4JAahkhbNk1eMQd43WYhXYBXT7LMsZ9eXPMo6NrM',
+  merkleTreeHook: 'H9fQ4JAahkhbNk1eMQd43WYhXYBXT7LMsZ9eXPMo6NrM',
+  interchainGasPaymaster: '4BdGAVnK4eY3PzEaLV7USzTcmaKteaNUaWhjfHaVUiBJ',
+  interchainSecurityModule: 'E4eiycW8PS5AQAdYCyQBcRuyEZiaFP2ghXSBBTDnCCqe',
+  validatorAnnounce: '3nnF9TNNfuboAT49ZeCbu6Wqb3QJLcM9UeCsRBGokmng',
+};
+
 // A map of chain names to ChainMetadata
 // Chains can be defined here, in chains.json, or in chains.yaml
 // Chains already in the SDK need not be included here unless you want to override some fields
@@ -19,8 +31,9 @@ import { ChainMap, ChainMetadata } from '@hyperlane-xyz/sdk';
 export const chains: ChainMap<ChainMetadata & { mailbox?: Address }> = {
   solanamainnet: {
     ...solanamainnet,
-    // SVM chains require mailbox addresses for the token adapters
+    // SVM chains require mailbox addresses for the token adapters.
     mailbox: solanamainnetAddresses.mailbox,
+    rpcUrls: [{ http: 'https://api.mainnet.solana.com' }],
   },
   eclipsemainnet: {
     ...eclipsemainnet,

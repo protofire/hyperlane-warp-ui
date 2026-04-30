@@ -97,4 +97,44 @@ tokens:
     connections:
       - token: ethereum|amn|0x98d0238e245CeFBD8846821D8CDdB0593ef32ec6
 
+  - chainName: solanamainnet
+    standard: SealevelHypNative
+    decimals: 9
+    symbol: SOL
+    name: Wrapped SOL
+    logoURI: /logos/solana.svg
+    addressOrDenom: Fspt3tEJVjDcQZ96TeukKBc5AFmoKDKUfVj78KnSrNdb
+    connections:
+      - token: ethereum|amn|0x0000AF4EAB3Eb8B1Be4E2e925C982393F6bf8bb6
+  - chainName: amn
+    standard: EvmHypSynthetic
+    decimals: 9
+    symbol: wSOL
+    name: Wrapped SOL
+    logoURI: /logos/solana.svg
+    addressOrDenom: "0x0000AF4EAB3Eb8B1Be4E2e925C982393F6bf8bb6"
+    connections:
+      - token: sealevel|solanamainnet|Fspt3tEJVjDcQZ96TeukKBc5AFmoKDKUfVj78KnSrNdb
+
+  - chainName: solanamainnet
+    standard: SealevelHypSynthetic
+    decimals: 9
+    symbol: wAI3
+    name: Wrapped AI3
+    logoURI: /logos/tatc.svg
+    addressOrDenom: 8HhMERjk5pXpA4Zmv9y68z5jaWd7qoZg3qtY8cGC3V4Z
+    mailbox: H9fQ4JAahkhbNk1eMQd43WYhXYBXT7LMsZ9eXPMo6NrM
+    collateralAddressOrDenom: veS2vDmcRY1Bd1zsC1TLiG85rXSwz119UCZAvNZBt7n
+    connections:
+      - token: ethereum|amn|0x095023fb8F85c96C766E8e00927E6DB6316EE9Eb
+  - chainName: amn
+    standard: EvmHypNative
+    decimals: 18
+    symbol: AI3
+    name: AI3
+    logoURI: /logos/tatc.svg
+    addressOrDenom: "0x095023fb8F85c96C766E8e00927E6DB6316EE9Eb"
+    connections:
+      - token: sealevel|solanamainnet|8HhMERjk5pXpA4Zmv9y68z5jaWd7qoZg3qtY8cGC3V4Z
+
 options: {}

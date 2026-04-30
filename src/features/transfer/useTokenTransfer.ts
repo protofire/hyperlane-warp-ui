@@ -1,4 +1,5 @@
 import {
+  MultiProtocolProvider,
   ProviderType,
   TypedTransactionReceipt,
   WarpCore,
@@ -35,13 +36,18 @@ const TRANSFER_TIMEOUT_ERROR2 = 'timeout';
 const EVM_TRANSFER_REMOTE_GAS_ESTIMATE = 450000n;
 
 /**
- * Apply gas limit multiplier to EVM transactions.
- * Handles both legacy (gasLimit) and EIP-1559 transactions.
- * Only modifies gasLimit, not gas prices (gasPrice, maxFeePerGas, maxPriorityFeePerGas).
+ * Apply gas limit and gas price multipliers to EVM transactions.
+ * Handles both legacy (gasLimit/gasPrice) and EIP-1559 (maxFeePerGas/maxPriorityFeePerGas) transactions.
  * If gasLimit is not set, uses SDK's default EVM_TRANSFER_REMOTE_GAS_ESTIMATE.
+ * Fetches current fee data from the RPC and applies gasPriceMultiplier as a buffer.
  */
-function applyGasLimitMultiplier(tx: WarpTypedTransaction): WarpTypedTransaction {
-  const multiplier = config.gasLimitMultiplier;
+async function applyGasMultipliers(
+  tx: WarpTypedTransaction,
+  multiProvider: MultiProtocolProvider,
+  originChain: string,
+): Promise<WarpTypedTransaction> {
+  const limitMultiplier = config.gasLimitMultiplier;
+  const priceMultiplier = config.gasPriceMultiplier;
 
   // Only apply to EVM transactions that have a transaction object
   if (tx.type !== ProviderType.EthersV5 || !tx.transaction) {
@@ -50,7 +56,7 @@ function applyGasLimitMultiplier(tx: WarpTypedTransaction): WarpTypedTransaction
 
   const transaction = tx.transaction as Record<string, unknown>;
 
-  // Get or use default gasLimit
+  // --- Gas Limit Multiplier ---
   let gasLimitBigInt: bigint;
   const originalGasLimit = transaction.gasLimit;
 
@@ -77,18 +83,65 @@ function applyGasLimitMultiplier(tx: WarpTypedTransaction): WarpTypedTransaction
   }
 
   // Apply multiplier: multiply by (multiplier * 100) / 100 to handle decimals
-  const multiplied = (gasLimitBigInt * BigInt(Math.round(multiplier * 100))) / BigInt(100);
+  const multipliedLimit =
+    (gasLimitBigInt * BigInt(Math.round(limitMultiplier * 100))) / BigInt(100);
 
   // Convert back to ethers BigNumber for SDK compatibility
-  const multipliedBN = BigNumber.from(multiplied.toString());
+  const multipliedLimitBN = BigNumber.from(multipliedLimit.toString());
 
-  logger.debug(`Applied gas limit multiplier: ${gasLimitBigInt} -> ${multiplied} (${multiplier}x)`);
+  logger.debug(
+    `Applied gas limit multiplier: ${gasLimitBigInt} -> ${multipliedLimit} (${limitMultiplier}x)`,
+  );
+
+  let gasPriceFields: Record<string, unknown> = {};
+
+  // --- Gas Price Multiplier ---
+  try {
+    const provider = multiProvider.getEthersV5Provider(originChain);
+    const feeData = await provider.getFeeData();
+
+    if (feeData.maxFeePerGas) {
+      // EIP-1559 chain
+      const maxFee = BigInt(feeData.maxFeePerGas.toString());
+      const maxPriority = BigInt((feeData.maxPriorityFeePerGas ?? feeData.maxFeePerGas).toString());
+
+      const multipliedMaxFee =
+        (maxFee * BigInt(Math.round(priceMultiplier * 100))) / BigInt(100);
+      const multipliedMaxPriority =
+        (maxPriority * BigInt(Math.round(priceMultiplier * 100))) / BigInt(100);
+
+      gasPriceFields = {
+        maxFeePerGas: BigNumber.from(multipliedMaxFee.toString()),
+        maxPriorityFeePerGas: BigNumber.from(multipliedMaxPriority.toString()),
+      };
+
+      logger.debug(
+        `Applied gas price multiplier (EIP-1559): maxFeePerGas ${maxFee} -> ${multipliedMaxFee}, maxPriorityFeePerGas ${maxPriority} -> ${multipliedMaxPriority} (${priceMultiplier}x)`,
+      );
+    } else if (feeData.gasPrice) {
+      // Legacy chain
+      const gasPrice = BigInt(feeData.gasPrice.toString());
+      const multipliedGasPrice =
+        (gasPrice * BigInt(Math.round(priceMultiplier * 100))) / BigInt(100);
+
+      gasPriceFields = {
+        gasPrice: BigNumber.from(multipliedGasPrice.toString()),
+      };
+
+      logger.debug(
+        `Applied gas price multiplier (legacy): gasPrice ${gasPrice} -> ${multipliedGasPrice} (${priceMultiplier}x)`,
+      );
+    }
+  } catch (error) {
+    logger.warn('Failed to fetch fee data for gas price multiplier, proceeding without', error);
+  }
 
   return {
     ...tx,
     transaction: {
       ...transaction,
-      gasLimit: multipliedBN,
+      gasLimit: multipliedLimitBN,
+      ...gasPriceFields,
     },
   } as WarpTypedTransaction;
 }
@@ -229,8 +282,10 @@ async function executeTransfer({
         transferIndex,
         (transferStatus = txCategoryToStatuses[WarpTxCategory.Transfer][0]),
       );
-      // Apply gas limit multiplier to Starknet transactions
-      const modifiedTxs = txs.map(applyGasLimitMultiplier);
+      // Apply gas multipliers to transactions
+      const modifiedTxs = await Promise.all(
+        txs.map((t) => applyGasMultipliers(t, multiProvider, origin)),
+      );
       const { hash, confirm } = await sendMultiTransaction({
         txs: modifiedTxs,
         chainName: origin,
@@ -248,8 +303,8 @@ async function executeTransfer({
       hashes.push(hash);
     } else {
       for (const tx of txs) {
-        // Apply gas limit multiplier to EVM transactions
-        const modifiedTx = applyGasLimitMultiplier(tx);
+        // Apply gas multipliers to EVM transactions
+        const modifiedTx = await applyGasMultipliers(tx, multiProvider, origin);
         updateTransferStatus(
           transferIndex,
           (transferStatus = txCategoryToStatuses[tx.category][0]),

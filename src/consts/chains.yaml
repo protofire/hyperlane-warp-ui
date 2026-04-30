@@ -61,3 +61,24 @@ bsc:
   protocol: ethereum
   rpcUrls:
     - http: https://bsc.drpc.org
+
+
+solanamainnet:
+  chainId: 1399811149
+  blockExplorers:
+    - apiUrl: https://public-api.solscan.io
+      family: other
+      name: Solscan
+      url: https://solscan.io
+  displayName: Solana
+  domainId: 1399811149
+  isTestnet: false
+  name: solanamainnet
+  logoURI: /logos/solana.svg
+  nativeToken:
+    decimals: 9
+    name: Solana
+    symbol: SOL
+  protocol: sealevel
+  rpcUrls:
+    - http: https://api.mainnet.solana.com

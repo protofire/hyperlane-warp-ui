@@ -5,7 +5,6 @@ import '@rainbow-me/rainbowkit/styles.css';
 import {
     argentWallet,
     binanceWallet,
-    coinbaseWallet,
     injectedWallet,
     ledgerWallet,
     metaMaskWallet,
@@ -32,7 +31,7 @@ function initWagmi(multiProvider: MultiProtocolProvider) {
       },
       {
         groupName: 'More',
-        wallets: [binanceWallet, coinbaseWallet, rainbowWallet, trustWallet, argentWallet],
+        wallets: [binanceWallet, rainbowWallet, trustWallet, argentWallet],
       },
     ],
     { appName: APP_NAME, projectId: config.walletConnectProjectId },

@@ -95,6 +95,13 @@ const nextConfig = {
       test: /\.ya?ml$/,
       use: 'yaml-loader',
     });
+    // Silence OpenTelemetry / Sentry "Critical dependency: the request of a
+    // dependency is an expression" warning emitted by require-in-the-middle.
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      { module: /@opentelemetry\/instrumentation/ },
+      { module: /require-in-the-middle/ },
+    ];
     return config;
   },
 
