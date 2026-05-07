@@ -1,5 +1,5 @@
-import { Token, WarpCore, WarpCoreFeeEstimate } from '@hyperlane-xyz/sdk';
-import { HexString, toWei } from '@hyperlane-xyz/utils';
+import { Token, TokenAmount, WarpCore, WarpCoreFeeEstimate } from '@hyperlane-xyz/sdk';
+import { HexString, ProtocolType, toWei } from '@hyperlane-xyz/utils';
 import { getAccountAddressAndPubKey, useAccounts, useDebounce } from '@hyperlane-xyz/widgets';
 import { useQuery } from '@tanstack/react-query';
 import { logger } from '../../utils/logger';
@@ -91,11 +91,31 @@ async function fetchFeeQuotes(
 
   const originTokenAmount = transferToken.amount(amountWei);
   logger.debug('Fetching fee quotes');
-  return warpCore.estimateTransferRemoteFees({
+  const fees = await warpCore.estimateTransferRemoteFees({
     originTokenAmount,
     destination,
     sender,
     senderPubKey: await senderPubKey,
     recipient: recipient,
   });
+  return correctSealevelLocalFee(fees, transferToken);
+}
+
+// Workaround for a bug in @hyperlane-xyz/sdk's estimateTransactionFeeSolanaWeb3:
+// it returns `unitsConsumed * prioritizationFee` without the
+// microLamports → lamports conversion (missing /1_000_000), inflating the local
+// quote by ~1e6×. It also omits Solana's base 5000-lamport-per-signature fee.
+// A warp transferRemote tx is signed by the sender and an ephemeral random
+// keypair (see SealevelTokenAdapter), so 2 signatures = 10_000 lamports base.
+function correctSealevelLocalFee(
+  fees: WarpCoreFeeEstimate | null,
+  originToken: Token,
+): WarpCoreFeeEstimate | null {
+  if (!fees || originToken.protocol !== ProtocolType.Sealevel) return fees;
+  const SOLANA_BASE_FEE_LAMPORTS = 10_000n;
+  const corrected = fees.localQuote.amount / 1_000_000n + SOLANA_BASE_FEE_LAMPORTS;
+  return {
+    ...fees,
+    localQuote: new TokenAmount(corrected, fees.localQuote.token),
+  };
 }
