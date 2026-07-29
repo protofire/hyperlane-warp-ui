@@ -5,6 +5,10 @@ export const links = {
   github: 'https://github.com/vana-com',
   docs: 'https://docs.vana.org/',
   warpDocs: 'https://docs.hyperlane.xyz/docs/reference/applications/warp-routes',
+  // Vana-controlled destination for the sunset notice. Deliberately points at Vana's docs rather
+  // than a third-party bridge URL so the destination stays fixable after this app is torn down.
+  vanaBridgingGuide: 'https://docs.vana.org/network/staking-bridging',
+  vanaSupportEmail: 'support@vanafoundation.org',
   gasDocs: 'https://docs.hyperlane.xyz/docs/reference/hooks/interchain-gas',
   chains: 'https://docs.hyperlane.xyz/docs/resources/domains',
   twitter: 'https://x.com/withvana',

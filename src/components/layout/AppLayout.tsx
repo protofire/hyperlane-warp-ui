@@ -10,6 +10,7 @@ import { useWalletConnectionTracking } from '../../features/analytics/useWalletC
 import { trackEvent } from '../../features/analytics/utils';
 import { useStore } from '../../features/store';
 import { SideBarMenu } from '../../features/wallet/SideBarMenu';
+import { DeprecationBanner } from '../banner/DeprecationBanner';
 import { Footer } from '../nav/Footer';
 import { Header } from '../nav/Header';
 
@@ -43,6 +44,7 @@ export function AppLayout({ children }: PropsWithChildren) {
         id="app-content"
         className="min-w-screen relative flex h-full min-h-screen w-full flex-col justify-between"
       >
+        <DeprecationBanner />
         <Header />
         <div className="mx-auto flex max-w-screen-xl grow items-center sm:px-4">
           <main className="my-4 flex w-full flex-1 items-center justify-center">{children}</main>
