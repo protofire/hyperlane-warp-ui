@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { config } from '../../consts/config';
 import { ConnectWalletButton } from '../../features/wallet/ConnectWalletButton';
 import Logo from '../../images/logos/app-logo.svg';
 import Name from '../../images/logos/app-name.svg';
@@ -14,9 +15,12 @@ export function Header() {
           <Image src={Name} width={130} alt="" className="ml-2 mt-0.5 hidden sm:block" />
           {/* <Image src={Title} width={210} alt="" className="ml-2 mt-0.5 pb-px" /> */}
         </Link>
-        <div className="flex flex-col items-end gap-2 md:flex-row-reverse md:items-start">
-          <ConnectWalletButton />
-        </div>
+        {/* Nothing to connect a wallet for once the bridge is retired */}
+        {!config.showDeprecationNotice && (
+          <div className="flex flex-col items-end gap-2 md:flex-row-reverse md:items-start">
+            <ConnectWalletButton />
+          </div>
+        )}
       </div>
     </header>
   );

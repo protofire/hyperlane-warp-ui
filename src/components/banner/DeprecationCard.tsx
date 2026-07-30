@@ -1,11 +1,10 @@
 import Image from 'next/image';
-import { config } from '../../consts/config';
 import { links } from '../../consts/links';
 import LinkIcon from '../../images/icons/external-link-icon.svg';
 import { Card } from '../layout/Card';
 
+// Rendered only when config.showDeprecationNotice is set; the page gates it.
 export function DeprecationCard() {
-  if (!config.showDeprecationNotice) return null;
   return (
     <Card className="w-100 space-y-3 sm:w-[31rem]">
       <h2 className="text-primary-500">Bridging to Vana has moved</h2>
