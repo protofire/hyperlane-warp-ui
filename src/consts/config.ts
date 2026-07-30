@@ -23,7 +23,9 @@ interface Config {
   registryBranch?: string | undefined; // Optional customization of the registry branch instead of main
   registryProxyUrl?: string; // Optional URL to use a custom proxy for the GithubRegistry
   showAddRouteButton: boolean; // Show/Hide the add route config icon in the button strip
+  showConnectWalletButton: boolean; // Show/Hide the connect wallet button in the header
   showDeprecationNotice: boolean; // Show/Hide the sunset banner and card announcing the bridge has been decommissioned
+  showTransferForm: boolean; // Show/Hide the transfer form and its floating button strip
   showAddChainButton: boolean; // Show/Hide add custom chain in the chain search menu
   showDisabledTokens: boolean; // Show/Hide invalid token options in the selection modal
   showTipBox: boolean; // Show/Hide the blue tip box above the transfer form
@@ -47,7 +49,10 @@ export const config: Config = Object.freeze({
   registryBranch,
   registryProxyUrl,
   showAddRouteButton: true,
+  // The bridge is retired: hide the wallet button and transfer form by default.
+  showConnectWalletButton: false,
   showDeprecationNotice: true,
+  showTransferForm: false,
   showAddChainButton: true,
   showDisabledTokens: false,
   showTipBox: false,

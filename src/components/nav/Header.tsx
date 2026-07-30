@@ -15,8 +15,7 @@ export function Header() {
           <Image src={Name} width={130} alt="" className="ml-2 mt-0.5 hidden sm:block" />
           {/* <Image src={Title} width={210} alt="" className="ml-2 mt-0.5 pb-px" /> */}
         </Link>
-        {/* Nothing to connect a wallet for once the bridge is retired */}
-        {!config.showDeprecationNotice && (
+        {config.showConnectWalletButton && (
           <div className="flex flex-col items-end gap-2 md:flex-row-reverse md:items-start">
             <ConnectWalletButton />
           </div>

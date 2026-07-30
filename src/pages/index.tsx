@@ -6,12 +6,13 @@ import { config } from '../consts/config';
 import { TransferTokenCard } from '../features/transfer/TransferTokenCard';
 
 const Home: NextPage = () => {
-  // The bridge is retired: show only the notice, centered by AppLayout's main element.
-  if (config.showDeprecationNotice) return <DeprecationCard />;
+  // With the form hidden the notice is the whole page, centered by AppLayout's main element.
+  if (!config.showTransferForm) return config.showDeprecationNotice ? <DeprecationCard /> : null;
 
   return (
     <div className="space-y-3 pt-4">
       <TipCard />
+      {config.showDeprecationNotice && <DeprecationCard />}
       <div className="relative">
         <TransferTokenCard />
         {/* MERGETODO */}
