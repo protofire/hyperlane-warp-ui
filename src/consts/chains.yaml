@@ -22,6 +22,7 @@ amn:
   protocol: ethereum
   rpcUrls:
     - http: https://auto-evm.mainnet.autonomys.xyz/ws
+    - http: https://auto-evm-0.mainnet.autonomys.xyz/ws
 
 ethereum:
   chainId: 1
@@ -36,6 +37,7 @@ ethereum:
     symbol: ETH
   rpcUrls:
     - http: https://ethereum-rpc.publicnode.com
+    - http: https://eth.drpc.org
   blockExplorers:
     - apiUrl: https://api.etherscan.io/api
       family: etherscan
@@ -60,7 +62,9 @@ bsc:
     symbol: BNB
   protocol: ethereum
   rpcUrls:
-    - http: https://bsc.drpc.org
+    - http: https://bsc-rpc.publicnode.com
+    - http: https://bsc-dataseed.bnbchain.org
+    - http: https://bsc-mainnet.public.blastapi.io
 
 
 solanamainnet:
@@ -81,5 +85,5 @@ solanamainnet:
     symbol: SOL
   protocol: sealevel
   rpcUrls:
-    - http: https://mainnet.helius-rpc.com/?api-key=e2e542b1-afdb-4f96-8b8f-55977b7a545e
-    - http: https://api.mainnet.solana.com
+    - http: https://solana-rpc.publicnode.com
+    - http: https://api.mainnet-beta.solana.com

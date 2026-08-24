@@ -34,8 +34,8 @@ export const chains: ChainMap<ChainMetadata & { mailbox?: Address }> = {
     // SVM chains require mailbox addresses for the token adapters.
     mailbox: solanamainnetAddresses.mailbox,
     rpcUrls: [
-      { http: 'https://mainnet.helius-rpc.com/?api-key=e2e542b1-afdb-4f96-8b8f-55977b7a545e' },
-      { http: 'https://api.mainnet.solana.com' }
+      { http: 'https://solana-rpc.publicnode.com' },
+      { http: 'https://api.mainnet-beta.solana.com' },
     ],
   },
   eclipsemainnet: {
