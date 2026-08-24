@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const { version } = require('./package.json');
-// const { withSentryConfig } = require('@sentry/nextjs');
+const { withSentryConfig } = require('@sentry/nextjs');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: false, // process.env.ANALYZE === 'true',
 });
@@ -116,18 +116,17 @@ const nextConfig = {
   reactStrictMode: true,
 };
 
-// const sentryOptions = {
-//   org: 'hyperlane',
-//   project: 'warp-ui',
-//   authToken: process.env.SENTRY_AUTH_TOKEN,
-//   hideSourceMaps: true,
-//   tunnelRoute: '/monitoring-tunnel',
-//   bundleSizeOptimizations: {
-//     excludeDebugStatements: true,
-//     excludeReplayIframe: true,
-//     excludeReplayShadowDom: true,
-//   },
-// };
+const sentryOptions = {
+  org: 'protofiredao',
+  project: 'autonomys-bridge',
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  hideSourceMaps: true,
+  tunnelRoute: '/monitoring-tunnel',
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayIframe: true,
+    excludeReplayShadowDom: true,
+  },
+};
 
-// module.exports = withBundleAnalyzer(withSentryConfig(nextConfig, sentryOptions));
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withBundleAnalyzer(withSentryConfig(nextConfig, sentryOptions));
