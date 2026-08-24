@@ -68,7 +68,18 @@ export async function assembleChainMetadata(
       }),
     ),
   );
-  const mergedChainMetadata = mergeChainMetadataMap(registryChainMetadata, filesystemMetadata);
+  const mergedChainMetadata = objMap(
+    mergeChainMetadataMap(registryChainMetadata, filesystemMetadata),
+    // mergeChainMetadataMap concatenates arrays rather than replacing them, so the registry's
+    // rpcUrls survive behind ours and the fallback provider keeps retrying them. Several are
+    // dead (binance.llamarpc.com, bnb.rpc.subquery.network) or CORS-blocked (eth.llamarpc.com,
+    // bsc-pokt.nodies.app). When a chain declares rpcUrls locally, that list is authoritative.
+    (chainName, metadata) => {
+      const localRpcUrls = filesystemMetadata[chainName]?.rpcUrls;
+      if (!localRpcUrls?.length) return metadata;
+      return { ...metadata, rpcUrls: localRpcUrls };
+    },
+  );
 
   const parsedRpcOverridesResult = tryParseJsonOrYaml(config.rpcOverrides);
   const rpcOverrides = z
