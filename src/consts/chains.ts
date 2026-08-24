@@ -77,3 +77,23 @@ export const chainsRentEstimate: ChainMap<bigint> = {
   sonicsvm: BigInt(Math.round(0.00411336 * 10 ** 9)),
   soon: BigInt(Math.round(0.00000355 * 10 ** 9)),
 };
+
+// Hard replacement for the rpcUrls of chains coming from the registry.
+// Unlike chains.yaml / chains.ts entries (which are array-merged with the registry values),
+// these fully replace the list, so dead endpoints are not probed by the RPC health check.
+export const rpcUrlOverrides: ChainMap<string[]> = {
+  // The registry lists https://sepolia.drpc.org, which now answers 400
+  // "chain is not available on free plan" to every request
+  sepolia: [
+    'https://ethereum-sepolia-rpc.publicnode.com',
+    'https://0xrpc.io/sep',
+    'https://rpc.sepolia.ethpandaops.io',
+    'https://gateway.tenderly.co/public/sepolia',
+  ],
+  // bsc-testnet.drpc.org still answers but fails on eth_getLogs
+  bsctestnet: [
+    'https://bsc-testnet-rpc.publicnode.com',
+    'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
+    'https://data-seed-prebsc-2-s1.bnbchain.org:8545',
+  ],
+};

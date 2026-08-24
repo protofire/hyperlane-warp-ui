@@ -36,6 +36,7 @@ acn:
   protocol: ethereum
   rpcUrls:
     - http: https://auto-evm.chronos.autonomys.xyz/ws
+    - http: https://auto-evm-0.chronos.autonomys.xyz/ws
   logoURI: /logos/tatc.svg
 
 solanatestnet:

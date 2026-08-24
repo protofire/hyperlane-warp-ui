@@ -14,7 +14,7 @@ import {
   tryParseJsonOrYaml,
 } from '@hyperlane-xyz/utils';
 import { z } from 'zod';
-import { chains as ChainsTS } from '../../consts/chains.ts';
+import { chains as ChainsTS, rpcUrlOverrides } from '../../consts/chains.ts';
 import ChainsYaml from '../../consts/chains.yaml';
 import { config } from '../../consts/config.ts';
 import { links } from '../../consts/links.ts';
@@ -68,7 +68,14 @@ export async function assembleChainMetadata(
       }),
     ),
   );
-  const mergedChainMetadata = mergeChainMetadataMap(registryChainMetadata, filesystemMetadata);
+  const mergedChainMetadata = objMap(
+    mergeChainMetadataMap(registryChainMetadata, filesystemMetadata),
+    (chainName, metadata) => {
+      const urls = rpcUrlOverrides[chainName];
+      // Replaces (not merges) the registry urls, dropping endpoints that no longer work
+      return urls ? { ...metadata, rpcUrls: urls.map((http) => ({ http })) } : metadata;
+    },
+  );
 
   const parsedRpcOverridesResult = tryParseJsonOrYaml(config.rpcOverrides);
   const rpcOverrides = z
